@@ -1,4 +1,3 @@
-#!/usr/bin/perl
 # w3tw0rk Perl IRC Bot Remote Code Execution
 # author: @shipcod3
 # for taking over a w3tw0rk Perl IRC Bot

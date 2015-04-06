@@ -1,7 +1,7 @@
 # w3tw0rk.py
 # w3tw0rk Perl IRC Bot Remote Code Execution
 # author: @shipcod3
-# for taking over a w3tw0rk Perl IRC Bot
+# description: for taking over a w3tw0rk Perl IRC Bot by using the admin nick
 
 import socket
 import sys

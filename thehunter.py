@@ -1,7 +1,7 @@
 # thehunter.py
 # Pitbull / w3tw0rk Perl IRC Bot Remote Code Execution
 # author: @shipcod3
-# description: for taking over a w3tw0rk Perl IRC Bot by using the admin nick
+# description: pitbull-w3tw0rk_hunter is POC exploit for Pitbull or w3tw0rk IRC Bot that takes over the owner of a bot which then allows Remote Code Execution.
 
 import socket
 import sys

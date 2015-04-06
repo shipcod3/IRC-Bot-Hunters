@@ -1,5 +1,5 @@
-# w3tw0rk.py
-# w3tw0rk Perl IRC Bot Remote Code Execution
+# thehunter.py
+# Pitbull / w3tw0rk Perl IRC Bot Remote Code Execution
 # author: @shipcod3
 # description: for taking over a w3tw0rk Perl IRC Bot by using the admin nick
 

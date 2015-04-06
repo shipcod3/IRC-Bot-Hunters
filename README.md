@@ -4,7 +4,7 @@ pitbull-w3tw0rk_hunter is POC exploit for Pitbull or w3tw0rk IRC Bot that takes 
 ![botslayer](https://cloud.githubusercontent.com/assets/3483615/7001410/a0b66606-dc6a-11e4-9034-8bed67e312fc.PNG)
 
 #usage
-python thehunter.py
+python thehunter.py nick
 
 #references
 http://shipcodex.blogspot.com/2012/02/pitbuls-perl-botmodded-by-wetwork.html

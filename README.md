@@ -7,5 +7,6 @@ pitbull-w3tw0rk_hunter is POC exploit for Pitbull or w3tw0rk IRC Bot that takes 
 python thehunter.py
 
 #references
+http://shipcodex.blogspot.com/2012/02/pitbuls-perl-botmodded-by-wetwork.html
 http://www.sans.org/reading-room/whitepapers/malicious/bots-botnet-overview-1299
 http://www.solutionary.com/resource-center/blog/2014/09/shellshock-accelerating-the-standard-timeline/

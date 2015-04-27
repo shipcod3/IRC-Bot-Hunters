@@ -32,7 +32,7 @@ def main(argv):
         print text   #print text to console
 
         if text.find('PING') != -1:                          #check if 'PING' is found
-            irc.send('PONG ' + text.split() [1] + '\r\n') #returnes 'PONG' back to the server (prevents pinging out!)
+            irc.send('PONG ' + text.split() [1] + '\r\n') #returns 'PONG' back to the server (prevents pinging out!)
         if text.find('!quit') != -1: #quit the Bot
             irc.send ("QUIT\r\n") 
             sys.exit()

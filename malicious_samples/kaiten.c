@@ -45,7 +45,7 @@
 #define FAKENAME "-amadz"	// What you want this to hide as
 #define CHAN "#lol"	// Channel to join
 #define KEY "bleh"		// The key of the channel
-int numservers=4;		// Must change this to equal number of servers down there
+int numservers=1;		// Must change this to equal number of servers down there
 char *servers[] = {		// List the servers in that format, always end in (void*)0
 	"192.168.93.137",
         (void*)0

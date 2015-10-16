@@ -26,8 +26,7 @@ class Metasploit3 < Msf::Exploit::Remote
       'License'        => MSF_LICENSE,
       'References'     =>
         [
-          [ 'OSVDB', '120384' ],
-          [ 'EDB', '36652' ]
+          [ 'URL', 'http://blog.malwaremustdie.org/2013/05/story-of-unix-trojan-tsunami-ircbot-w.html' ] #MalwareMustDie
         ],
       'Platform'       => %w{ unix win },
       'Arch'           => ARCH_CMD,
@@ -42,7 +41,7 @@ class Metasploit3 < Msf::Exploit::Remote
         },
       'Targets'  =>
         [
-          [ 'w3tw0rk', { } ]
+          [ 'kaiten bot', { } ]
         ],
       'Privileged'     => false,
       'DisclosureDate' => 'Oct 16 2015',

@@ -62,13 +62,13 @@ class Metasploit3 < Msf::Exploit::Remote
 
     response = register(sock)
     if response =~ /463/ or response =~ /464/
-      vprint_error("#{rhost}:#{rport} - Connection to the IRC Server not allowed")
+      vprint_error("#{peer} - Connection to the IRC Server not allowed")
       return Exploit::CheckCode::Unknown
     end
 
     response = join(sock)
     if not response =~ /353/ and not response =~ /366/
-      vprint_error("#{rhost}:#{rport} - Error joining the #{datastore['CHANNEL']} channel")
+      vprint_error("#{peer} - Error joining the #{datastore['CHANNEL']} channel")
       return Exploit::CheckCode::Unknown
     end
 
@@ -113,7 +113,7 @@ class Metasploit3 < Msf::Exploit::Remote
     end
 
     msg << "NICK #{nick}\r\n"
-    msg << "USER #{nick} #{Rex::Socket.source_address(rhost)} #{rhost} :#{nick}\r\n"
+    msg << "USER #{nick} #{Rex::Socket.source_address(peer} :#{nick}\r\n"
 
     response = send_msg(sock,msg)
     return response
@@ -143,14 +143,14 @@ class Metasploit3 < Msf::Exploit::Remote
     print_status("#{peer} - Registering with the IRC Server...")
     response = register(sock)
     if response =~ /463/ or response =~ /464/
-      print_error("#{rhost}:#{rport} - Connection to the IRC Server not allowed")
+      print_error("#{peer} - Connection to the IRC Server not allowed")
       return
     end
 
     print_status("#{peer} - Joining the #{datastore['CHANNEL']} channel...")
     response = join(sock)
     if not response =~ /353/ and not response =~ /366/
-      print_error("#{rhost}:#{rport} - Error joining the #{datastore['CHANNEL']} channel")
+      print_error("#{peer} - Error joining the #{datastore['CHANNEL']} channel")
       return
     end
 

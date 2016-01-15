@@ -8,4 +8,7 @@ w3tw0rk / Pitbull Perl IRC Bot Remote Code Execution PoC Exploit - https://www.e
 
 Legend Perl IRC Bot - Remote Code Execution  - https://www.exploit-db.com/exploits/36836/
 
+# Inspiration
+- MalwareMustDie!
+
 

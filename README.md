@@ -21,7 +21,7 @@ Legend Perl IRC Bot - Remote Code Execution  - https://www.exploit-db.com/exploi
 # Inspiration
 - MalwareMustDie!
 
-# Request for Metasploit Module?
+# Request for Metasploit Modules?
 Want an IRC bot pwned or you have an exploit for an IRC bot that you want to be ported to msf? Contact me at shipcodez@gmail.com
 
 I am always open for suggestions and new modules as long as you give me details and analysis of a new IRC bot in the wild. Save the world from cavities!!!

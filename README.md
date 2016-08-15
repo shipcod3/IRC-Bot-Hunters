@@ -1,5 +1,5 @@
 # IRC Bot Hunters
-a collection of Metasploit PoC exploits for IRC Botnets that takes over the owner of a bot which then allows Remote Code Execution. 
+a collection of Metasploit PoC exploits for IRC Botnets that takes over the owner of a bot which then allows Remote Code Execution. Most IRC Botnets can be taken over by using their herders' usernames or by triggering a certain command which does shell execution. Almost all of the modules here have been accepted in the Metasploit repository. If you are looking for C&C exploit modules, I have also made some modules which I have pushed in the main msf repository.
 
 ![image](https://cloud.githubusercontent.com/assets/3483615/9675972/44986a28-52f7-11e5-8c1a-76cabf835cb6.png)
 

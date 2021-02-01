@@ -1,5 +1,5 @@
 # IRC Bot Hunters
-a collection of Metasploit PoC exploits for IRC Botnets that takes over the owner of a bot which then allows Remote Code Execution. Most IRC Botnets can be taken over by using their herders' usernames or by triggering a certain command which does shell execution. Almost all of the modules here have been accepted in the Metasploit repository. If you are looking for C&C exploit modules or pwning backdoors like r57 / c99 shell, I have also made [some modules](https://github.com/rapid7/metasploit-framework/search?utf8=%E2%9C%93&q=jay+turla) which I have pushed in the main msf repository.
+a collection of Metasploit PoC exploits I wrote for IRC Botnets that takes over the owner of a bot which then allows Remote Code Execution. Most IRC Botnets can be taken over by using their herders' usernames or by triggering a certain command which does shell execution. Almost all of the modules here have been accepted in the Metasploit repository. If you are looking for C&C exploit modules or pwning backdoors like r57 / c99 shell, I have also made [some modules](https://github.com/rapid7/metasploit-framework/search?utf8=%E2%9C%93&q=jay+turla) which I have pushed in the main msf repository.
 
 ![image](https://cloud.githubusercontent.com/assets/3483615/9675972/44986a28-52f7-11e5-8c1a-76cabf835cb6.png)
 

@@ -1,5 +1,29 @@
 #!/usr/bin/perl
 
+#-Charles-220513- (@Command List shipcode_jjt)
+#-Charles-220513- (@Copyright (C) 2007)
+#-Charles-220513- <————————————————>
+#-Charles-220513- (!bht) (@help)
+#-Charles-220513- (!bht) (@portscan) <IP/domain Name>
+#-Charles-220513- (!bht) (@udpflood) <IP> <packet-size> <time>
+#-Charles-220513- (!bht) (@tcpflood) <IP> <port> <time>
+#-Charles-220513- (!bht) (@httpflood) <www.website.com> <time>
+#-Charles-220513- (!bht) (@say) <msg>
+#-Charles-220513- (!bht) (@join) <#>
+#-Charles-220513- (!bht) (@part) <#>
+#-Charles-220513- (!bht) (@nick) <nick>
+#-Charles-220513- (!bht) (@msg) <#/nick>
+#-Charles-220513- (!bht) (@tsunami) <banyak pesan> <#/nick> <msg>
+#-Charles-220513- (!bht) (@op) <nick>
+#-Charles-220513- (!bht) (@deop) <nick>
+#-Charles-220513- (!bht) (@voice) <nick>
+#-Charles-220513- (!bht) (@devoice) <nick>
+#-Charles-220513- (!bht) (@reset)
+#-Charles-220513- (!bht) (@die) <msg>
+#-Charles-220513- Charles (@back) <ip> <port>
+#-Charles-220513- Charles (@command² di atas)
+#-Charles-220513- <————————————————>
+
 #use LWP::UserAgent;
 
 my $linas_max = '5';
